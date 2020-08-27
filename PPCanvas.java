@@ -53,6 +53,35 @@ public class PPCanvas extends Canvas
   
    public void draw(GraphicsContext gc)//method to draw the level
    {  
+   
+      //draw menu
+      //hudsons code here
+      Button b1 = new Button("Start");
+      Button b2 = new Button("Load");
+      
+      TilePane r = new TilePane();
+      
+      Image menuImage = new Image("contraption-zack_1.gif");
+      gc.drawImage(menuImage, 800, 800);
+      
+      //clear the screen if b1 (play) is pressed
+      b1.setOnAction(new ButtonHandler());
+      
+      
+      
+      
+      
+      
+      //while(
+      
+      
+      
+      
+      //if start or load is pressed, continue in code to draw the 1st level
+      //while(button is not pressed)
+   
+   
+   
       //jakes images 
       Image jukebox_1 = new Image("jukebox_frame_1_small.png");
       Image jukebox_2 = new Image("jukebox_frame_2_small.png");
@@ -90,9 +119,24 @@ public class PPCanvas extends Canvas
          }
                   
       }.start();
-
-
-      //hudsons code here
+      
+      
+      
+      
+     
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
       
       //import images
       Image brick = new Image("1Brick.png");//20
@@ -147,6 +191,22 @@ public class PPCanvas extends Canvas
          }
       }
    }
+
+
+   //button handler class
+   public class ButtonHandler implements EventHandler<ActionEvent>
+   {
+      public void handle( ActionEvent e)
+      {
+         gc.clearRect(0, 0, 800, 800);
+         
+      }
+   }
+
+
+
+
+
 
    public class KeyHandler implements EventHandler<KeyEvent>
    {
