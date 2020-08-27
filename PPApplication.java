@@ -20,28 +20,65 @@ import javax.imageio.*;
 
 public class PPApplication extends Application
 {
+   //instantiate the canvas object for the levels as well as flowpan
+   PPCanvas canvas = new PPCanvas();
+   FlowPane fp = new FlowPane();
+   
+   //set up buttons
+   Button b1 = new Button("Start");
+   Button b2 = new Button("Load");
+   
+   
+   //menu flag
+   int flag = 0;
+   
+   
+   
    public void start(Stage stage)
    {
-      //Create flowpane root
-      FlowPane root = new FlowPane();
+      //set up root
+      Group root = new Group();
       
-      //instantiate PPCanvas object canvas 
-      PPCanvas canvas = new PPCanvas();
+      Scene scene = new Scene( root);
+      stage.setScene( scene );
+      stage.setTitle( "Puzzle Project" );
+     
       
-      //add canvas to root flowpane
+      //set up flow pane for menu
+      
+      fp.setBackground(new Background( new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
+      
+      //add stuff to root group
       root.getChildren().add(canvas);
+      root.getChildren().add(fp);
+  
+      // create buttons
+      b1.setPrefSize(150, 75);
+      b2.setPrefSize(150, 75);
+      
+      fp.getChildren().add(b1);
+      fp.getChildren().add(b2);
+      
+      
+      b1.setFocusTraversable(false);
+      b1.setOnAction( new ButtonHandler() );
+      
+      b2.setFocusTraversable(false);
+      b2.setOnAction( new ButtonHandler() );
+     
+      
+            
 
-      //Set scene
-      Scene scene = new Scene(root, 800, 800);//sets up window 
-      stage.setScene(scene);
-      stage.setTitle("Puzzle Project Application");
+      //Show scene
       stage.show();
    
-      canvas.requestFocus();
+      //canvas.requestFocus();
+
    }
    
    public class PPCanvas extends Canvas
    {      
+      
       //instantiate graphics context "gc"
       GraphicsContext gc = getGraphicsContext2D();
       
@@ -67,32 +104,10 @@ public class PPApplication extends Application
          x = 100;
          y = 100;
          
-         /*
-   
-         //Make a Button
-         Button b = new Button("change color");
-         b.setOnAction(new ButtonHandler());
-   
-         //Set up event handler
-         setOnKeyPressed(new KeyHandler());
-         public class ButtonHandler implements EventHandler<ActionEvent>
-         {
-            public void handle(ActionEvent e)
-            {
-               
-               draw(gc);            
-            }
-         }
-         */
-         
-         draw(gc);
-      }
-     
-      public void draw(GraphicsContext gc)//method to draw the level
-      {  
          //jakes images 
          Image jukebox_1 = new Image("jukebox_frame_1_small.png");
          Image jukebox_2 = new Image("jukebox_frame_2_small.png");
+         
          
          //set up animation timer
          final long startTime = System.nanoTime();
@@ -101,39 +116,46 @@ public class PPApplication extends Application
             public void handle( long currentTime)
             {
                double time_past = (currentTime - startTime) / 500000000; //this makes it in seconds
-            //jukebox   
-            for(int i=0; i<40; i++)
-            {
-               for(int j=0; j<40; j++)
+               //jukebox   
+               for(int i=0; i<40; i++)
                {
-                  //Jukebox animation (Possible switch here)
-                  if(level.getData(i,j) == 22)
+                  for(int j=0; j<40; j++)
                   {
-                     if( time_past % 2 == 0 ) //checks if even or odd second, activates if even
+                     //Jukebox animation (Possible switch here)
+                     if(level.getData(i,j) == 22)
                      {
-                        gc.drawImage( jukebox_1,j*20,i*20,60,120); //place image
+                        if( time_past % 2 == 0 ) //checks if even or odd second, activates if even
+                        {
+                           gc.drawImage( jukebox_1,j*20,i*20,60,120); //place image
+                        }
+                        else
+                        {
+                           gc.drawImage( jukebox_2,j*20,i*20,60,120); //place image
+                        }   
                      }
-                     else
-                     {
-                        gc.drawImage( jukebox_2,j*20,i*20,60,120); //place image
-                     }   
+                     //treadmill
+                     
+                     //etc.
                   }
-                  //treadmill
                   
-                  //etc.
+                  draw(gc);
                }
             }
-    
-            }
-                     
          }.start();
-   
-   
-         //hudsons code here
+
          
+         
+         
+         //draw(gc);
+      }
+     
+      public void draw(GraphicsContext gc)//method to draw the level
+      {    
+           
          //import images
-         Image brick = new Image("1Brick.png");//20
+         //Image brick = new Image("1Brick.png");//20
          Image uparrow = new Image("uparrow.png");//21 
+         Image background = new Image("background.jpg");
           
          for(int i=0; i<40; i++)
          {
@@ -161,7 +183,7 @@ public class PPApplication extends Application
                }
                if(level.getData(i,j)==20)//if value is 20 draw brick image at i,j
                {
-                  gc.drawImage(brick,j*20,i*20,80,80);
+                  //gc.drawImage(brick,j*20,i*20,80,80);
                   
                }
                if(level.getData(i,j)==21)//if value is 21 draw arrow image at i,j
@@ -177,8 +199,23 @@ public class PPApplication extends Application
                }
                */
    
+               
                gc.setFill(Color.YELLOW);
                gc.fillRect(x, y, 20, 20);
+               
+               //if button not pressed cover everything
+               if( flag == 0)
+               {
+                  
+                  gc.setFill(Color.BLACK);
+                  gc.fillRect( 0, 0, 800, 800);
+                  
+                  gc.setFill(Color.WHITE);
+                  gc.fillText( "Contraption Zack!!!!", 100, 100);
+                  gc.fillText( "BY Harry, Hudson, and Jake", 500, 500);
+                  //gc.drawImage(background, 0,0,800,800);
+                   
+               }
             }
          }
       }
@@ -254,6 +291,28 @@ public class PPApplication extends Application
          y = y_in;
          data = levelData[x][y];
          return data;
+      }
+   }
+   
+   
+   //button handler class
+   public class ButtonHandler implements EventHandler<ActionEvent>
+   {
+      public void handle( ActionEvent e)
+      {                           
+         //change flag to 1
+         flag = 1;
+         
+         //clears everything, including buttons
+         fp.getChildren().clear();
+
+         
+         //if button is pressed
+         //if (e.getSource() == b1)
+            //System.out.println("start");
+         //else if(e.getSource() == b2)
+            //System.out.println("load");
+        
       }
    }
 }
