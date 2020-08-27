@@ -17,7 +17,6 @@ import javafx.scene.control.*;
 import java.io.*;
 import javax.imageio.*;
 
-
 public class PPCanvas extends Canvas
 {      
    //instantiate graphics context "gc"
@@ -54,14 +53,47 @@ public class PPCanvas extends Canvas
   
    public void draw(GraphicsContext gc)//method to draw the level
    {  
-      //put jakes code here 
+      //jakes images 
+      Image jukebox_1 = new Image("jukebox_frame_1_small.png");
+      Image jukebox_2 = new Image("jukebox_frame_2_small.png");
       
+      //set up animation timer
+      final long startTime = System.nanoTime();
+      new AnimationTimer()
+      {
+         public void handle( long currentTime)
+         {
+            double time_past = (currentTime - startTime) / 500000000; //this makes it in seconds
+            
+         for(int i=0; i<40; i++)
+         {
+            for(int j=0; j<40; j++)
+            {
+               if(level.getData(i,j) == 22)
+               {
+                  if( time_past % 2 == 0 ) //checks if even or odd second, activates if even
+                  {
+                     gc.drawImage( jukebox_1,j*20,i*20,60,120); //place image
+                  }
+                  else
+                  {
+                     gc.drawImage( jukebox_2,j*20,i*20,60,120); //place image
+                  }   
+               }
+            }
+         }
+         }
+                  
+      }.start();
+
+
       //hudsons code here
       
       //import images
       Image brick = new Image("1Brick.png");//20
       Image uparrow = new Image("uparrow.png");//21
       Image jukebox = new Image("Jukebox.gif");//22
+      
        
       for(int i=0; i<40; i++)
       {
@@ -97,12 +129,13 @@ public class PPCanvas extends Canvas
                gc.drawImage(uparrow,j*20,i*20,40,40);
                
             }
+            /*
             if(level.getData(i,j)==22)//if value is 22 draw jukebox gif at i,j
             {
                gc.drawImage(jukebox,j*20,i*20,60,120);
                
             }
-
+            */
 
             gc.setFill(Color.YELLOW);
             gc.fillRect(x, y, 20, 20);
@@ -197,12 +230,7 @@ public class PPCanvas extends Canvas
                }*/
             }
          }
-      
       draw(gc);
-      }
-      
-      
+      }  
    }
-
-
 }
