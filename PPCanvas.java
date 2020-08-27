@@ -14,9 +14,16 @@ import javafx.geometry.*;
 import javafx.animation.*;
 import javafx.scene.image.*;
 import javafx.scene.control.*;
+import java.io.*;
+import javax.imageio.*;
+
+import java.io.File; 
+import java.io.IOException; 
+import java.awt.image.BufferedImage; 
+import javax.imageio.ImageIO; 
 
 public class PPCanvas extends Canvas
-{
+{      
    //instantiate graphics context "gc"
    GraphicsContext gc = getGraphicsContext2D();
    
@@ -44,23 +51,37 @@ public class PPCanvas extends Canvas
       
       //Set up event handler
       setOnKeyPressed(new KeyHandler());
+      BufferedImage image1 = null;
+
       
+      try 
+      {
+         // Read from a file
+         File brickimage = new File("1Brick.png");
+         image1 = ImageIO.read(brickimage);
+        
+      
+  
+      }
+      catch(Exception ex)
+      {
+         ex.printStackTrace();
+      }
+
       draw(gc);
    }
+            
       /*
-      //Creating an image 
-      Image image = new Image(new FileInputStream("Brick.jpg"));  
-      
       //Setting the image view 
       ImageView imageView = new ImageView(image); 
       
       //Setting the position of the image 
-      imageView.setX(50); 
-      imageView.setY(25); 
+      imageView.setX(20); 
+      imageView.setY(20); 
       
       //setting the fit height and width of the image view 
-      imageView.setFitHeight(455); 
-      imageView.setFitWidth(500); 
+      imageView.setFitHeight(20); 
+      imageView.setFitWidth(20); 
       
       //Setting the preserve ratio of the image view 
       imageView.setPreserveRatio(true);  
@@ -89,18 +110,22 @@ public class PPCanvas extends Canvas
                gc.setFill(Color.GREY);
                gc.fillRect(j*20.0, i*20.0, 20, 20);  
             }
-            if(level.getData(i,j)==12)//if value is 2 draw grey square at i,j
+            if(level.getData(i,j)==12)//if value is 2 draw light grey square at i,j
             {
                gc.setFill(Color.LIGHTGREY);
                gc.fillRect(j*20.0, i*20.0, 20, 20);  
             }
-
-
+            if(level.getData(i,j)==20)//if value is 20 draw brick image at i,j
+            {
+               Image image = new Image("1Brick.png");
+               
+               gc.drawImage(image, i-3, j-3,40,40);
+            }
+            
+            gc.setFill(Color.YELLOW);
+            gc.fillRect(x, y, 20, 20);
          }
       }
-      
-      gc.setFill(Color.YELLOW);
-      gc.fillRect(x, y, 20, 20);
    }
 
    public class KeyHandler implements EventHandler<KeyEvent>
