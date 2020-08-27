@@ -14,10 +14,6 @@ import javafx.scene.image.*;
 import java.net.*;
 import javafx.geometry.*;
 import javafx.animation.*;
-
-
-//trying to add image
-//import javafx.scene.image.*;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException; 
 import javafx.application.Application; 
@@ -27,7 +23,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;  
 import javafx.stage.Stage; 
 
-//
+
 
 
 
@@ -38,13 +34,6 @@ public class PPApplication extends Application
    public void start(Stage stage) throws FileNotFoundException 
    {
       
-      
-      
-      
-      
-      
-      
-      
       //Create flowpane root
       FlowPane root = new FlowPane();
       
@@ -52,41 +41,53 @@ public class PPApplication extends Application
       PPCanvas canvas = new PPCanvas();
       
       //add canvas to root flowpane
-      root.getChildren().add(canvas);
+      //root.getChildren().add(canvas);
       
       
       
       
-      
-      /*
       //ADD MENU IMAGE
+   
       Image menuImage = new Image("https://www.myabandonware.com/media/screenshots/c/contraption-zack-1dc/contraption-zack_1.gif");
-      ImageView imageView = new ImageView(menuImage);
-      root.getChildren().add(imageView);
-      */
-      
-      
-      
-      Image image = new Image("https://www.myabandonware.com/media/screenshots/c/contraption-zack-1dc/contraption-zack_1.gif");
-      ImageView mv = new ImageView(image);
-      
-      //Group root = new Group();
-      root.getChildren().addAll(mv);
+      //ImageView imageView = new ImageView(menuImage);
 
-
-
+      BackgroundImage menuBackgroundImage = new BackgroundImage(menuImage, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
+      //root.setBackground(new Background(menuBackgroundImage));
+      
+      // create Background 
+      Background background = new Background(menuBackgroundImage); 
+  
+      // set background 
+      root.setBackground(background);
+      
+      
+      
+      
+      
+       
+      //Add menu buttons
+      Button start = new Button("Start");
+      Button load = new Button("load");
+      root.getChildren().add(start);
+      root.getChildren().add(load);      
+      
+      
+      
+      
+      
+      
+      
 
       //Set scene
       Scene scene = new Scene(root, 500,500);//sets up window
       stage.setScene(scene);
       stage.setTitle("Puzzle Project Application");
       
-      Button start = new Button("Start");
-      Button load = new Button("load");
       
-      canvas.getChildren().add(start);
-      canvas.getChildren().add(load);
-      //
+      
+      
+      
+      
       
       
       
