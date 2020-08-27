@@ -17,10 +17,6 @@ import javafx.scene.control.*;
 import java.io.*;
 import javax.imageio.*;
 
-import java.io.File; 
-import java.io.IOException; 
-import java.awt.image.BufferedImage; 
-import javax.imageio.ImageIO; 
 
 public class PPCanvas extends Canvas
 {      
@@ -51,22 +47,7 @@ public class PPCanvas extends Canvas
       
       //Set up event handler
       setOnKeyPressed(new KeyHandler());
-      BufferedImage image1 = null;
 
-      
-      try 
-      {
-         // Read from a file
-         File brickimage = new File("1Brick.png");
-         image1 = ImageIO.read(brickimage);
-        
-      
-  
-      }
-      catch(Exception ex)
-      {
-         ex.printStackTrace();
-      }
 
       draw(gc);
    }
@@ -90,21 +71,26 @@ public class PPCanvas extends Canvas
       Group root = new Group(imageView);
       */ 
    public void draw(GraphicsContext gc)//method to draw the level
-   {      
+   {  
+      //import image
+      Image image = new Image("1Brick.png");
+       
       for(int i=0; i<40; i++)
       {
          for(int j=0; j<40; j++)
          {
-            if(level.getData(i,j) == 0)//if value is 0 draw white square at i,j
+            if(level.getData(i,j) == 0)//if value is 0 draw black square at i,j
             {
                gc.setFill(Color.BLACK);
                gc.fillRect(j*20.0, i*20.0, 20, 20);  
             }
+            /*
             if(level.getData(i,j)==1)//if value is 1 draw black square at i,j
             {
                gc.setFill(Color.WHITE);
                gc.fillRect(j*20.0, i*20.0, 20, 20);  
             }
+            */
             if(level.getData(i,j)==2)//if value is 2 draw grey square at i,j
             {
                gc.setFill(Color.GREY);
@@ -117,9 +103,8 @@ public class PPCanvas extends Canvas
             }
             if(level.getData(i,j)==20)//if value is 20 draw brick image at i,j
             {
-               Image image = new Image("1Brick.png");
+               gc.drawImage(image,j*20,i*20,80,80);
                
-               gc.drawImage(image, i-3, j-3,40,40);
             }
             
             gc.setFill(Color.YELLOW);
