@@ -64,11 +64,12 @@ public class PPCanvas extends Canvas
          public void handle( long currentTime)
          {
             double time_past = (currentTime - startTime) / 500000000; //this makes it in seconds
-            
+         //jukebox   
          for(int i=0; i<40; i++)
          {
             for(int j=0; j<40; j++)
             {
+               //Jukebox animation (Possible switch here)
                if(level.getData(i,j) == 22)
                {
                   if( time_past % 2 == 0 ) //checks if even or odd second, activates if even
@@ -80,8 +81,12 @@ public class PPCanvas extends Canvas
                      gc.drawImage( jukebox_2,j*20,i*20,60,120); //place image
                   }   
                }
+               //treadmill
+               
+               //etc.
             }
          }
+ 
          }
                   
       }.start();
