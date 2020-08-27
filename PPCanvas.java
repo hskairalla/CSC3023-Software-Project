@@ -51,30 +51,17 @@ public class PPCanvas extends Canvas
 
       draw(gc);
    }
-            
-      /*
-      //Setting the image view 
-      ImageView imageView = new ImageView(image); 
-      
-      //Setting the position of the image 
-      imageView.setX(20); 
-      imageView.setY(20); 
-      
-      //setting the fit height and width of the image view 
-      imageView.setFitHeight(20); 
-      imageView.setFitWidth(20); 
-      
-      //Setting the preserve ratio of the image view 
-      imageView.setPreserveRatio(true);  
-      
-      //Creating a Group object  
-      Group root = new Group(imageView);
-      */ 
+  
    public void draw(GraphicsContext gc)//method to draw the level
    {  
+      //put jakes code here 
+      
+      //hudsons code here
+      
       //import images
       Image brick = new Image("1Brick.png");//20
       Image uparrow = new Image("uparrow.png");//21
+      Image jukebox = new Image("Jukebox.gif");//22
        
       for(int i=0; i<40; i++)
       {
@@ -105,11 +92,17 @@ public class PPCanvas extends Canvas
                gc.drawImage(brick,j*20,i*20,80,80);
                
             }
-            if(level.getData(i,j)==21)//if value is 20 draw arrow image at i,j
+            if(level.getData(i,j)==21)//if value is 21 draw arrow image at i,j
             {
                gc.drawImage(uparrow,j*20,i*20,40,40);
                
             }
+            if(level.getData(i,j)==22)//if value is 22 draw jukebox gif at i,j
+            {
+               gc.drawImage(jukebox,j*20,i*20,60,120);
+               
+            }
+
 
             gc.setFill(Color.YELLOW);
             gc.fillRect(x, y, 20, 20);
