@@ -72,8 +72,9 @@ public class PPCanvas extends Canvas
       */ 
    public void draw(GraphicsContext gc)//method to draw the level
    {  
-      //import image
-      Image image = new Image("1Brick.png");
+      //import images
+      Image brick = new Image("1Brick.png");//20
+      Image uparrow = new Image("uparrow.png");//21
        
       for(int i=0; i<40; i++)
       {
@@ -84,13 +85,11 @@ public class PPCanvas extends Canvas
                gc.setFill(Color.BLACK);
                gc.fillRect(j*20.0, i*20.0, 20, 20);  
             }
-            /*
-            if(level.getData(i,j)==1)//if value is 1 draw black square at i,j
+            if(level.getData(i,j)==1)//if value is 1 draw white square at i,j
             {
                gc.setFill(Color.WHITE);
                gc.fillRect(j*20.0, i*20.0, 20, 20);  
             }
-            */
             if(level.getData(i,j)==2)//if value is 2 draw grey square at i,j
             {
                gc.setFill(Color.GREY);
@@ -103,10 +102,15 @@ public class PPCanvas extends Canvas
             }
             if(level.getData(i,j)==20)//if value is 20 draw brick image at i,j
             {
-               gc.drawImage(image,j*20,i*20,80,80);
+               gc.drawImage(brick,j*20,i*20,80,80);
                
             }
-            
+            if(level.getData(i,j)==21)//if value is 20 draw arrow image at i,j
+            {
+               gc.drawImage(uparrow,j*20,i*20,40,40);
+               
+            }
+
             gc.setFill(Color.YELLOW);
             gc.fillRect(x, y, 20, 20);
          }
