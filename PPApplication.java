@@ -163,7 +163,7 @@ public class PPApplication extends Application
          Image springTile = new Image("springTile.png");//10
          Image uparrow = new Image("uparrow.png");//21          
          Image brick = new Image("1Brick.png");//20 
-         Image greybrick = new Image("greybrick.png");//20
+         //23
          Image button1 = new Image("button.jpg");//24
          Image purpleBU = new Image("Purple_BU.png");//30
          Image orangeBU = new Image("Orange_BU.png");//31
@@ -242,11 +242,7 @@ public class PPApplication extends Application
                {
                   gc.drawImage(uparrow,j*20,i*20,40,60);
                   
-               }
-               if(level.getData(i,j)==23)//if value is 23 draw grey brick at i,j
-               {
-                  gc.drawImage(greybrick,j*20,i*20,40,40);
-                  
+               }  
                }
                if(level.getData(i,j)==24)//if value is 24 draw button at i,j
                {
