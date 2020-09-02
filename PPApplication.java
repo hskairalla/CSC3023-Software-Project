@@ -126,11 +126,11 @@ public class PPApplication extends Application
                      {
                         if( time_past % 2 == 0 ) //checks if even or odd second, activates if even
                         {
-                           gc.drawImage( jukebox_1,j*20,i*20,60,120); //place image
+                           gc.drawImage( jukebox_1,j*20,i*20,80,80); //place image
                         }
                         else
                         {
-                           gc.drawImage( jukebox_2,j*20,i*20,60,120); //place image
+                           gc.drawImage( jukebox_2,j*20,i*20,80,80); //place image
                         }   
                      }
                      //treadmill
