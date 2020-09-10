@@ -293,7 +293,7 @@ public class PuzzleProjectNewFormat2 extends Application
          }
          else
          {
-            System.out.println( "no draw, menu open");
+            //System.out.println( "no draw, menu open");
             //set up menu 
             gc.setFill(Color.BLACK);
             gc.fillRect( 0, 0, 800, 800);
@@ -406,6 +406,7 @@ public class PuzzleProjectNewFormat2 extends Application
          System.out.println( "button press");
          
          canvas.getLevel().setLevelName( "jukebox_room.txt");
+         fp.clear();
          
       }
    }
@@ -529,6 +530,17 @@ public class PuzzleProjectNewFormat2 extends Application
       public RaisedTile( String value_in )
       {
          value = value_in;
+         
+         switch( value)
+         {
+            case "202": //metal tile
+               Image metalTile = new Image("Metal_Tile.png");//202
+               image = metalTile;
+               height = 80;
+               width = 80;
+               break;
+         
+         }
       }
       
       
