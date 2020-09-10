@@ -17,7 +17,7 @@ import javafx.animation.*;
 import java.io.*;
 import javax.imageio.*;
 
-public class PuzzleProjectNewFormat extends Application
+public class PuzzleProjectNewFormat2 extends Application
 {
 
    
@@ -106,12 +106,12 @@ public class PuzzleProjectNewFormat extends Application
          setOnKeyPressed(new KeyHandler());  
          
          //x and y vars for moving zack
-         x = 100;
-         y = 100;
+         x = 200;
+         y = 200;
          /////////////////////////////////////////////////////////         
 
-         level.loadData();
-         level.draw(gc);
+         //level.loadData();
+         //level.draw(gc);
          
          
          
@@ -126,7 +126,7 @@ public class PuzzleProjectNewFormat extends Application
                
                
                
-               /*
+               
                if( half_second % 1 == 0 ) //activates every half second 
                {
                   //read text file to create 2D object array (load data)
@@ -134,8 +134,12 @@ public class PuzzleProjectNewFormat extends Application
                   
                   //check for key press, update player movement 
                   level.draw(gc);
+                  
+                  //level.updateData();
+                  
+                  //level.writeData();
                }
-               */
+               
                
                //check if character has done a switch press (update data)
                
@@ -148,17 +152,17 @@ public class PuzzleProjectNewFormat extends Application
          }.start();
       
       } 
+      public PPLevel getLevel()
+      {
+         return level;
+      }
             
    }
    
    public class PPLevel
    {
-      // Image emptySquare = new Image("Empty_Square.jpg");//100
-
-      
-      String levelName = "test_format_2.txt"; //maybe set to "menu" initial for menu stuff
       Object[][] objectArray;
-      
+      String levelName = "menu"; //start game on menu
       
       public PPLevel()   
       {
@@ -172,7 +176,6 @@ public class PuzzleProjectNewFormat extends Application
       //load method to loadData the data from a .txt file
       public void loadData()
       {
-         System.out.println( levelName);
          if( levelName != "menu")
          {
             //System.out.println( "Debug 2");
@@ -236,7 +239,7 @@ public class PuzzleProjectNewFormat extends Application
          
          else
          {
-            System.out.println( "Menu active");
+            //System.out.println( "Menu active");
          }
       }
 
@@ -291,13 +294,48 @@ public class PuzzleProjectNewFormat extends Application
          else
          {
             System.out.println( "no draw, menu open");
+            //set up menu 
+            gc.setFill(Color.BLACK);
+            gc.fillRect( 0, 0, 800, 800);
+            Image background = new Image("background.jpg");
+            gc.drawImage(background, 100, 100, 600, 700);
+            gc.setFill(Color.WHITE);
+            gc.fillText( "BY Harry, Hudson, and Jake", 500, 500);
          }
       
       }
+      /*
+      //update method to update values
+      public void updateData()
+      {
+         for( int i=0; i<40; i++)
+         {
+            for( int j=0; j<40; j++)
+            {
+               String value = objectArray[i][j].getValue();
+               String first2Chars = ""+value.charAt(0) + value.charAt(1);
+               String frameNum = ""+ value.charAt(2);
+               
+               if( first2Chars.equals("90") )
+               {
+                  //objectArray[i][j].nextFrame(); //move jukebox to next frame
+                  if( frameNum.equals("1") )
+                     frameNum = "2";
+                  else
+                     frameNum = "1";
+                     
+               } 
+             }  
+         }
+         
+      }
       
       //write method to write the level back to the .txt file
+      public void writeData()
+      {
       
-      
+      }
+      */
       
       
       //accessor to get data at specific point
@@ -365,8 +403,10 @@ public class PuzzleProjectNewFormat extends Application
       public void handle( ActionEvent e)
       {  
          //if menu button pressed, change level from menu to level 1
-         //level.setLevelName("test_format_2.txt"); 
          System.out.println( "button press");
+         
+         canvas.getLevel().setLevelName( "jukebox_room.txt");
+         
       }
    }
    
@@ -693,18 +733,22 @@ public class PuzzleProjectNewFormat extends Application
    
    public class Misc extends Object
    {
+      String frameNum;
       
       public Misc( String value_in )
       {
          value = value_in;
          
          String first2Chars = ""+value.charAt(0) + value.charAt(1); //only use 2 chars to allow variability in frame counter
+         
+         frameNum =  ""+value.charAt(2);
+         
          switch( first2Chars )
          {
             case "90": //jukebox
                height = 80;
                width = 80;
-               switch( ""+value.charAt(2) ) //now pick image for which frame its on
+               switch( frameNum ) //now pick image for which frame its on
                {
                   case "1":
                      Image jukebox_1 = new Image("jukebox_frame_1_small.png");
@@ -736,6 +780,13 @@ public class PuzzleProjectNewFormat extends Application
       public int getWidth()
       {
          return width;
+      }
+      public void nextFrame() //moves animation to next frame
+      {
+         if( frameNum.equals("1") )
+            frameNum = "2";
+         else
+            frameNum = "1";
       }
    }
    
