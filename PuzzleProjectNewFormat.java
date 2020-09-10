@@ -17,7 +17,7 @@ import javafx.animation.*;
 import java.io.*;
 import javax.imageio.*;
 
-public class PuzzleProjectNewFormat2 extends Application
+public class PuzzleProjectNewFormat extends Application
 {
 
    
@@ -31,10 +31,10 @@ public class PuzzleProjectNewFormat2 extends Application
    Button b2 = new Button("Load");
    
    /////////////////////////////////////////////
-   int x;
-   int y;
+   int x = 350;
+   int y = 600;
    int z = 0;
-   
+   boolean a = false; 
    public void start(Stage stage)
    {
       
@@ -278,16 +278,52 @@ public class PuzzleProjectNewFormat2 extends Application
             ///////////////////////////////////////////////
             gc.setFill(Color.WHITE);
             // gc.fillRect(x, y, 40, 40);
-            
-            if(z == 4 || z == 1)
+            if(z == 4)
             {
-               Image moveRight = new Image("moveRight.png");// character moving right
-               gc.drawImage(moveRight, x, y, 40, 40);
+               if(a == true)
+               {
+                  Image moveRight1 = new Image("moveRight1.png");// character moving right 1
+                  gc.drawImage(moveRight1, x, y, 40, 40);
+               }
+               else
+               {
+                  Image moveRight2 = new Image("moveRight2.png");// character moving right 2
+                  gc.drawImage(moveRight2, x, y, 40, 40);
+               }
+               
             }
             if(z == 2 || z == 3)
             {
-               Image moveLeft = new Image("moveLeft.png");// character moving right
-               gc.drawImage(moveLeft, x, y, 40, 40);
+               if(a == true)
+               {
+                  Image moveLeft1 = new Image("moveLeft1.png");// character moving left 1
+                  gc.drawImage(moveLeft1, x, y, 40, 40);
+               }
+               else
+               {
+                  Image moveLeft2 = new Image("moveLeft2.png");// character moving left 2
+                  gc.drawImage(moveLeft2, x, y, 40, 40);
+               }
+               
+
+            }
+            if(z == 1)
+            {
+               if(a == true)
+               {
+                  Image moveUp1 = new Image("moveUp1.png");// character moving up 1
+                  gc.drawImage(moveUp1, x, y, 40, 40);
+               }
+               else
+               {
+                  Image moveUp2 = new Image("moveUp2.png");// character moving up 2
+                  gc.drawImage(moveUp2, x, y, 40, 40);
+               }
+            }
+            if(z == 0)
+            {
+               Image moveLeft1 = new Image("moveLeft1.png");// character moving left 1
+               gc.drawImage(moveLeft1, x, y, 40, 40);
             }
             ///////////////////////////////////////////////
          }
@@ -388,6 +424,13 @@ public class PuzzleProjectNewFormat2 extends Application
             System.out.println("right "+x);
             z=4;
          }
+         if(a == true)
+         {
+          a = false;
+         }
+         else
+         a = true;
+
          ////////////////////////////////////////////////////////////////////////
          
      }
