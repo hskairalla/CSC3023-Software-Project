@@ -406,7 +406,7 @@ public class PuzzleProjectNewFormat2 extends Application
          System.out.println( "button press");
          
          canvas.getLevel().setLevelName( "jukebox_room.txt");
-         fp.clear();
+         fp.getChildren().clear();
          
       }
    }
