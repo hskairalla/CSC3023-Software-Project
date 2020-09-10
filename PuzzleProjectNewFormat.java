@@ -17,10 +17,10 @@ import javafx.animation.*;
 import java.io.*;
 import javax.imageio.*;
 
-
 public class PuzzleProjectNewFormat extends Application
 {
 
+   
    //canvas stuff
    PPCanvas canvas = new PPCanvas();
    FlowPane fp = new FlowPane();
@@ -30,6 +30,10 @@ public class PuzzleProjectNewFormat extends Application
    Button b1 = new Button("Start");
    Button b2 = new Button("Load");
    
+   /////////////////////////////////////////////
+   int x;
+   int y;
+   int z = 0;
    
    public void start(Stage stage)
    {
@@ -63,19 +67,15 @@ public class PuzzleProjectNewFormat extends Application
       
       b2.setFocusTraversable(false);
       b2.setOnAction( new ButtonHandler() );
-     
             
 
       //Show scene
       stage.show();
    
-      //canvas.requestFocus();
-      
-      
-      
+      canvas.requestFocus();     
    }
     
-   
+
    public class PPCanvas extends Canvas
    {
       //instantiate graphics context "gc"
@@ -89,24 +89,27 @@ public class PuzzleProjectNewFormat extends Application
       //instantiate level object
       PPLevel level = new PPLevel();
       
-      
-      //x and y vars for moving zack
-      int x;
-      int y;
+      /////////////////////////////////////////////////////
+      //x and y vars for moving character
+      //int x;
+      //int y;
+      /////////////////////////////////////////////
 
-       
-      
-      
       
       public PPCanvas()   
       {
          setWidth(800);//set width
          setHeight(800);//set heigth
          
-         //x and y variables for player
+         ///////////////////////////////////////////////////////// 
+         //Set up event handler
+         setOnKeyPressed(new KeyHandler());  
+         
+         //x and y vars for moving zack
          x = 100;
          y = 100;
-         
+         /////////////////////////////////////////////////////////         
+
          level.loadData();
          level.draw(gc);
          
@@ -139,17 +142,18 @@ public class PuzzleProjectNewFormat extends Application
                //call draw() on updated data (draw data)
                
                //save data back to text file -> Maybe use dictionary? <- (save data)
-            
+               level.draw(gc);
             
             }
          }.start();
-     
-      }    
+      
+      } 
+            
    }
    
    public class PPLevel
    {
-      Image emptySquare = new Image("Empty_Square.jpg");//100
+      // Image emptySquare = new Image("Empty_Square.jpg");//100
 
       
       String levelName = "test_format_2.txt"; //maybe set to "menu" initial for menu stuff
@@ -268,7 +272,21 @@ public class PuzzleProjectNewFormat extends Application
                   }
                }
             }
+            ///////////////////////////////////////////////
+            gc.setFill(Color.WHITE);
+            // gc.fillRect(x, y, 40, 40);
             
+            if(z == 4 || z == 1)
+            {
+               Image moveRight = new Image("moveRight.png");// character moving right
+               gc.drawImage(moveRight, x, y, 40, 40);
+            }
+            if(z == 2 || z == 3)
+            {
+               Image moveLeft = new Image("moveLeft.png");// character moving right
+               gc.drawImage(moveLeft, x, y, 40, 40);
+            }
+            ///////////////////////////////////////////////
          }
          else
          {
@@ -300,20 +318,48 @@ public class PuzzleProjectNewFormat extends Application
    
    //key & button handlers
    
+
    public class KeyHandler implements EventHandler<KeyEvent>
    {
       public void handle(KeyEvent event)
       {
+         ////////////////////////////////////////////////////////////////////////
+         if(event.getCode() == KeyCode.UP)//if up key is pressed
+         {
+            y=y-3; //move square up by subtracting y coordinate by 3
+            System.out.println("up "+y);
+            z=1;
+         }
+      
+         if(event.getCode() == KeyCode.LEFT)//if left key is pressed
+         {
+            x=x-3; //move square left by subtracting x coordinate by 3
+            System.out.println("left "+x);
+            z=2;
+         }
+         if(event.getCode() == KeyCode.DOWN)//if down key is pressed
+         {
+            y=y+3; //move square down by adding y coordinate by 3 
+            System.out.println("down "+y);
+            z=3;
+         }
+      
+         if(event.getCode() == KeyCode.RIGHT)//if right key is pressed
+         {
+            x=x+3; //move square down by adding y coordinate by 3
+            System.out.println("right "+x);
+            z=4;
+         }
+         ////////////////////////////////////////////////////////////////////////
+         
+     }
          //based on arrow key press, move player
          
          //check for collision
          //checkCollision(player);
-          
-      }
-      
       //call draw() method?
    }
-   
+ 
    public class ButtonHandler implements EventHandler<ActionEvent>
    {
       public void handle( ActionEvent e)
@@ -377,10 +423,14 @@ public class PuzzleProjectNewFormat extends Application
             case "103": //white tile
                Image whiteTile = new Image("White_Tile.png");//103
                image = whiteTile;
+               height = 80;
+               width = 80;
                break;
             case "104": //black tile
                Image blackTile = new Image("Black_Tile.png");//104
                image = blackTile;
+               height = 80;
+               width = 80;
                break;
             case "105": //metal tile
                Image metalTile = new Image("Metal_Tile.png");//105
@@ -545,9 +595,18 @@ public class PuzzleProjectNewFormat extends Application
       public Wall( String value_in )
       {
          value = value_in;
+         
+         switch(value)
+         {
+            case "202": //empty tile
+               Image metalTile = new Image("Metal_Tile.png");//2020
+               image = metalTile;
+               height = 80;
+               width = 80;
+               break;
+         }
       }
-      
-      
+     
       public String getValue()
       {
          return value;
@@ -565,6 +624,7 @@ public class PuzzleProjectNewFormat extends Application
          return width;
       }
    }
+   
    public class Portal extends Object
    {
       String connectingRoom;
