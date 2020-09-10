@@ -29,33 +29,6 @@ public class PuzzleProjectNewFormat extends Application
    //set up buttons
    Button b1 = new Button("Start");
    Button b2 = new Button("Load");
-
-   //menu flag
-   int flag = 0;
-   
-   //universal vars
-   
-   //String levelName;
-   
-   
-   //set up images to be used in the loadData() method
-      
-   Image emptySquare = new Image("Empty_Square.jpg");//100
-   //Image whiteSquare = new Image("White_Square.png");//101 NOT NEEDED
-   //Image blackSquare = new Image("Black_Square.png");//102 NOT NEEDED
-
-   Image whiteTile = new Image("White_Tile.png");//103
-   Image blackTile = new Image("Black_Tile.png");//104
-   Image metalTile = new Image("Metal_Tile.png");//105
-   Image greyTile = new Image("Grey_Tile.png");//106
-   Image greyTile4 = new Image("Grey_Tile4.png");//107
-   Image brick = new Image("1Brick.png");//110 
-   //Image greyBrick = new Image("greybrick.png");//111
-   
-   Image jukebox_1 = new Image("jukebox_frame_1_small.png");//901
-   Image jukebox_2 = new Image("jukebox_frame_2_small.png");//902
-     
-
    
    
    public void start(Stage stage)
@@ -105,7 +78,6 @@ public class PuzzleProjectNewFormat extends Application
    
    public class PPCanvas extends Canvas
    {
-      
       //instantiate graphics context "gc"
       GraphicsContext gc = getGraphicsContext2D();
       
@@ -135,6 +107,10 @@ public class PuzzleProjectNewFormat extends Application
          x = 100;
          y = 100;
          
+         level.loadData();
+         level.draw(gc);
+         
+         
          
          
          //animation timer to handle animated objects
@@ -147,7 +123,7 @@ public class PuzzleProjectNewFormat extends Application
                
                
                
-               
+               /*
                if( half_second % 1 == 0 ) //activates every half second 
                {
                   //read text file to create 2D object array (load data)
@@ -156,6 +132,7 @@ public class PuzzleProjectNewFormat extends Application
                   //check for key press, update player movement 
                   level.draw(gc);
                }
+               */
                
                //check if character has done a switch press (update data)
                
@@ -172,9 +149,11 @@ public class PuzzleProjectNewFormat extends Application
    
    public class PPLevel
    {
-      String levelName = "menu";
-         
-      Object[][] objectArray;;
+      Image emptySquare = new Image("Empty_Square.jpg");//100
+
+      
+      String levelName = "test_format_2.txt"; //maybe set to "menu" initial for menu stuff
+      Object[][] objectArray;
       
       
       public PPLevel()   
@@ -206,54 +185,42 @@ public class PuzzleProjectNewFormat extends Application
                      //read next num from file
                      String value = read.next();
                      
-                     //separate the num into an arraylist
-                     List<Character> valueList = new ArrayList<>();
-                     for( int k=0; k< value.length(); k++)
-                     {
-                        valueList.add(value.charAt(k));
-                     }
+                     
                      
                      //create Object based on the first # in list, then use value as the arguments for the Object
-                     char firstNum = valueList.get(0);
-                     
-                     switch( firstNum ) 
+                     switch( value.charAt(0) ) 
                      {
                         case '1': //value is a Tile
-                           objectArray[i][j] = new Tile( valueList); 
-                           //System.out.print(objectArray[i][j].getValue() + " "); 
+                           objectArray[i][j] = new Tile(value);
                            break;
                         case '2': //value is RaisedTile
-                           objectArray[i][j] = new RaisedTile( valueList);
+                           objectArray[i][j] = new RaisedTile(value);
                            break;
                         case '3': //value is Wall
-                           objectArray[i][j] = new Wall( valueList);
+                           objectArray[i][j] = new Wall(value);
                            break;
                         case '4': //value is Spike
-                           objectArray[i][j] = new Spike( valueList);
+                           objectArray[i][j] = new Spike(value);
                            break;
                         case '5': //value is PressurePlate
-                           objectArray[i][j] = new PressurePlate( valueList);
+                           objectArray[i][j] = new PressurePlate(value);
                            break;
                         case '6': //value is Spring
-                           objectArray[i][j] = new Spring( valueList);
+                           objectArray[i][j] = new Spring(value);
                            break;
                         case '7': //value is Gate
-                           objectArray[i][j] = new Gate( valueList);
+                           objectArray[i][j] = new Gate(value);
                            break;
                         case '8': //value is Portal
-                           objectArray[i][j] = new Portal( valueList);
+                           objectArray[i][j] = new Portal(value);
                            break;
                         case '9': //value is Misc.
-                           objectArray[i][j] = new Misc( valueList);
+                           objectArray[i][j] = new Misc(value);
                            break;  
-                        
-                        default:
-                           //objectArrayList.get(i).add( new Tile( valueList) );
-                           //objectArray[i][j] = new Tile(valueList); 
-                           //System.out.print(objectArray[i][j].getValue() + " ");
                      }
+                     //System.out.print( objectArray[i][j].getValue() + " "); //for debugging
                   }
-                 //System.out.println();
+                 //System.out.println(); //for debugging
                }
                //System.out.println( "Debug 3");
             }
@@ -261,45 +228,47 @@ public class PuzzleProjectNewFormat extends Application
             {
                System.out.println( "File " + levelName + " not found"); 
             }
-            
-            //debug
-            for( int i=0; i<40; i++)
-            {
-               for( int j=0; j<40; j++)
-               {
-                  //System.out.print(objectArray[i][j].getValue() + " ");
-               }
-               //System.out.println();
-            }
          }
+         
          else
          {
             System.out.println( "Menu active");
          }
       }
 
+      
+      
+      
       //draw method to draw the level to the screen
-      
-      //write method to write the level back to the .txt file
-      
-      
-
       public void draw(GraphicsContext gc)
       {
+         
          if( levelName != "menu")
          {
+            //System.out.println( "in draw method");
             //read from the 2D object array and based on data draw the level
-            gc.fillRect( 10, 10, 30, 30);
             
             for( int i=0; i<40; i++)
             {
                for( int j=0; j<40; j++)
                {
+                  int height = objectArray[i][j].getHeight();
+                  int width = objectArray[i][j].getWidth();
                   
-                  gc.fillRect(j*20.0, i*20.0, 20, 20);
-                  //gc.drawImage(objectArray[i][j].getImage(),j*20,i*20,20,20);  
+                  //to cover for null space
+                  if( objectArray[i][j].getValue().equals("100") )
+                  {
+                     //System.out.println("100 value found");
+                     gc.setFill(Color.BLACK);  
+                     gc.fillRect(20*j, 20*i, height, width);               
+                  }
+                  else
+                  {
+                     gc.drawImage( objectArray[i][j].getImage(), 20*j, 20*i, height, width);
+                  }
                }
             }
+            
          }
          else
          {
@@ -308,6 +277,11 @@ public class PuzzleProjectNewFormat extends Application
       
       }
       
+      //write method to write the level back to the .txt file
+      
+      
+      
+      
       //accessor to get data at specific point
       public int getData(int x_in, int y_in)
       {
@@ -315,7 +289,7 @@ public class PuzzleProjectNewFormat extends Application
          return 1;
       }
       
-      public String setLevelName( String levelName_in)
+      public void setLevelName( String levelName_in)
       {
          levelName = levelName_in;
          System.out.println("level changed to: " + levelName);
@@ -324,108 +298,7 @@ public class PuzzleProjectNewFormat extends Application
    }
    
    
-   
-   /*
-   public void loadData( String fileName_in)
-   {
-      //given file name, read in the .txt file into the 2D object array
-      String fileName = fileName_in;
-      
-      //set up temp object for filling up the 2d array
-      //Object temp;
-      
-      System.out.println("Load() called");
-      
-      try //Try catch loop to catch fnfe
-      {
-         File inputFile = new File(fileName);
-         Scanner read = new Scanner(inputFile);//scanner to read in the file
-         
-         
-         //read the text file into the Object Array
-         for(int i=0; i<40; i++)
-         {
-            for(int j=0; j<40; j++)
-            {
-               int value = read.nextInt();
-               
-               //System.out.print( value + " "); //testing
-               
-               //turn "value" into a list of each individual #
-               List<Character> valueList = new ArrayList<>();
-               for( char ch : Integer.toString(value).toCharArray())
-               {
-                  valueList.add(ch);
-               }
-               
-               //generic Object to be placed into the Object array
-               //Object temp;
-               
-               switch( valueList.get(0) ) //create object type based on the first # in list
-               {
-                  case '1': //the value is a Tile
-                     
-                     temp = new Tile(valueList);
-                     System.out.println("add attempt");
-                     objectArray[i][j] = temp; 
-                     System.out.println(objectArray[i][j]); 
-                     break;
-                     
-                  case '2': //the value is a RaisedTile
-                  
-                     temp = new RaisedTile(valueList);
-                     objectArray[i][j] = temp;
-                     break;
-                  
-                  case '3': //the value is a Wall
-                     temp = new Wall(valueList);
-                     objectArray[i][j] = temp;
-                     break; 
-                  
-                  case '4': //the value is a Spike
-                     temp = new Spike(valueList);
-                     objectArray[i][j] = temp;
-                     break;
-                  
-                  case '5': //the value is a Pressure Plate
-                     temp = new PressurePlate(valueList);
-                     objectArray[i][j] = temp;  
-                     break;
-                  
-                  case '6': //the value is a Spring
-                     temp = new Spring(valueList);
-                     objectArray[i][j] = temp;
-                     break;
-                  
-                  case '7': //the value is a Gate
-                     temp = new Gate(valueList);
-                     objectArray[i][j] = temp; 
-                     break; 
-                  
-                  case '8': //the value is a Portal
-                     temp = new Portal(valueList);
-                     objectArray[i][j] = temp;
-                     break;
-                  
-                  case '9': //the value is Miscellaneous (Misc)
-                     temp = new Misc(valueList);
-                     objectArray[i][j] = temp;
-                     break;     
-               }
-             
-            }
-            //System.out.println(); //testing
-         }        
-         //end nested for loops  
-      }
-       catch(FileNotFoundException fnfe)
-      {
-         System.out.println( "File " + fileName + " not found"); 
-      }
-      
-      System.out.println("Load done");
-   }
-   */
+   //key & button handlers
    
    public class KeyHandler implements EventHandler<KeyEvent>
    {
@@ -438,7 +311,7 @@ public class PuzzleProjectNewFormat extends Application
           
       }
       
-      //call draw() method
+      //call draw() method?
    }
    
    public class ButtonHandler implements EventHandler<ActionEvent>
@@ -446,7 +319,7 @@ public class PuzzleProjectNewFormat extends Application
       public void handle( ActionEvent e)
       {  
          //if menu button pressed, change level from menu to level 1
-         level.setLevelName("test_format_2.txt"); 
+         //level.setLevelName("test_format_2.txt"); 
          System.out.println( "button press");
       }
    }
@@ -462,12 +335,13 @@ public class PuzzleProjectNewFormat extends Application
    
    public abstract class Object
    {
-      protected int height = 20;
-      protected int width = 20;
+      String value;
+      int height = 20; //protected?
+      int width = 20;
+      Image image;
    
       public Object()
       {
-         
       }
       
       //abstract methods
@@ -480,54 +354,54 @@ public class PuzzleProjectNewFormat extends Application
    
    
    public class Tile extends Object
-   {
-      
-      String colorNum;
-      String value;
-      Image image = emptySquare;
-      
-      
-      public Tile( List<Character> valueList)
+   {  
+      public Tile(String value_in )
       {
-         //Figure out the tile color based on the 2 & 3rd list numbers and reassemble the list to get "value"
-         value = ""+valueList.get(0) + valueList.get(1)+valueList.get(2);
-         colorNum = ""+valueList.get(0) + valueList.get(1);
+         //set up string 'value'
+         value = value_in;
          
-         switch( colorNum)
+         switch( value)
          {
             case "100": //empty tile
-               image = emptySquare;
+               //Image emptySquare = new Image("Empty_Square.jpg");//100
+               //image = emptySquare;
                break;
-               
+            case "101": //white square
+               Image whiteSquare = new Image("White_Square.jpg");//101
+               image = whiteSquare;
+               break;
+            case "102": //black/grey square
+               Image blackSquare = new Image("Black_Square.jpg");//102
+               image = blackSquare;
+               break;
             case "103": //white tile
+               Image whiteTile = new Image("White_Tile.png");//103
                image = whiteTile;
                break;
             case "104": //black tile
+               Image blackTile = new Image("Black_Tile.png");//104
                image = blackTile;
                break;
             case "105": //metal tile
+               Image metalTile = new Image("Metal_Tile.png");//105
                image = metalTile;
                break;
             case "106": //grey tile
+               Image greyTile = new Image("Grey_Tile.png");//106
                image = greyTile;
                break;
             case "107": //grey tile4
+               Image greyTile4 = new Image("Grey_Tile4.png");//107
                image = greyTile4;
                break;
             case "110": //brick tile
+               Image brick = new Image("1Brick.png");//110
                image = brick;
                break;
             case "111": //grey brick tile
                //image = greyBrick;
                break;
-            /*
-            case "101": //white square
-               image = whiteSquare;
-               break;
-            case "102": //grey square
-               image = greySquare;
-               break;
-               
+            /*   
             case "108": //half metal tile
                image = halfMetalTile;
                break;
@@ -536,9 +410,7 @@ public class PuzzleProjectNewFormat extends Application
                break;
             */
          }
-         
-         //System.out.println( valueList.get(0) + " " + valueList.get(1) + " " + valueList.get(2));
-               
+              
       }
       
       public String getValue() //returns original value #
@@ -563,16 +435,10 @@ public class PuzzleProjectNewFormat extends Application
    
    public class RaisedTile extends Object
    {
-      String colorNum;
-      String value;
-      Image image;
       
-      public RaisedTile( List<Character> valueList )
+      public RaisedTile( String value_in )
       {
-         //combine the valueList to get the "value"
-         value = ""+valueList.get(0) + valueList.get(1)+valueList.get(2);
-         colorNum = ""+valueList.get(0) + valueList.get(1);
-         
+         value = value_in;
       }
       
       
@@ -596,14 +462,10 @@ public class PuzzleProjectNewFormat extends Application
    
    public class Spike extends Object
    {
-      String colorNum;
-      String value;
-      Image image;
-      public Spike( List<Character> valueList )
+      
+      public Spike( String value_in )
       {
-         //combine the valueList to get the "value"
-         value = ""+valueList.get(0) + valueList.get(1)+valueList.get(2);
-         colorNum = ""+valueList.get(0) + valueList.get(1);
+         value = value_in;
       }
       
       
@@ -627,14 +489,9 @@ public class PuzzleProjectNewFormat extends Application
    
    public class PressurePlate extends Object
    {
-      String colorNum;
-      String value;
-      Image image;
-      public PressurePlate( List<Character> valueList )
+      public PressurePlate( String value_in )
       {
-         //combine the valueList to get the "value"
-         value = ""+valueList.get(0) + valueList.get(1)+valueList.get(2);
-         colorNum = ""+valueList.get(0) + valueList.get(1);
+         value = value_in;
       }
       
       
@@ -658,14 +515,10 @@ public class PuzzleProjectNewFormat extends Application
    
    public class Spring extends Object
    {
-      String colorNum;
-      String value;
-      Image image;
-      public Spring( List<Character> valueList )
+      
+      public Spring( String value_in )
       {
-         //combine the valueList to get the "value"
-         value = ""+valueList.get(0) + valueList.get(1)+valueList.get(2);
-         colorNum = ""+valueList.get(0) + valueList.get(1);
+         value = value_in;
       }
       
       
@@ -689,14 +542,9 @@ public class PuzzleProjectNewFormat extends Application
    
    public class Wall extends Object
    {
-      String colorNum;
-      String value;
-      Image image;
-      public Wall( List<Character> valueList )
+      public Wall( String value_in )
       {
-         //combine the valueList to get the "value"
-         value = ""+valueList.get(0) + valueList.get(1)+valueList.get(2);
-         colorNum = ""+valueList.get(0) + valueList.get(1); 
+         value = value_in;
       }
       
       
@@ -719,17 +567,23 @@ public class PuzzleProjectNewFormat extends Application
    }
    public class Portal extends Object
    {
-      String colorNum;
-      String value;
-      Image image;
-      
       String connectingRoom;
       
-      public Portal( List<Character> valueList )
+      public Portal( String value_in )
       {
-         //combine the valueList to get the "value"
-         value = ""+valueList.get(0) + valueList.get(1)+valueList.get(2);
-         colorNum = ""+valueList.get(0) + valueList.get(1); 
+         value = value_in;
+         height = 40;
+         width = 40;
+         
+         String first2Chars = ""+value.charAt(0) + value.charAt(1);
+         
+         switch( first2Chars)
+         {
+            case "80": //Up Portal
+               Image upPortal = new Image("uparrow.png");//21
+               image = upPortal;
+               break;
+         }
       }
       
       
@@ -753,14 +607,10 @@ public class PuzzleProjectNewFormat extends Application
    
    public class Gate extends Object
    {
-      String colorNum;
-      String value;
-      Image image;
-      public Gate( List<Character> valueList )
+      
+      public Gate( String value_in )
       {
-         //combine the valueList to get the "value"
-         value = ""+valueList.get(0) + valueList.get(1)+valueList.get(2);
-         colorNum = ""+valueList.get(0) + valueList.get(1); 
+         value = value_in;
       }
       
       public String getValue()
@@ -783,14 +633,31 @@ public class PuzzleProjectNewFormat extends Application
    
    public class Misc extends Object
    {
-      String colorNum;
-      String value;
-      Image image;
-      public Misc( List<Character> valueList )
+      
+      public Misc( String value_in )
       {
-         //combine the valueList to get the "value"
-         value = ""+valueList.get(0) + valueList.get(1)+valueList.get(2);
-         colorNum = ""+valueList.get(0) + valueList.get(1); 
+         value = value_in;
+         
+         String first2Chars = ""+value.charAt(0) + value.charAt(1); //only use 2 chars to allow variability in frame counter
+         switch( first2Chars )
+         {
+            case "90": //jukebox
+               height = 80;
+               width = 80;
+               switch( ""+value.charAt(2) ) //now pick image for which frame its on
+               {
+                  case "1":
+                     Image jukebox_1 = new Image("jukebox_frame_1_small.png");
+                     image = jukebox_1;
+                     break;
+                  case "2":
+                     Image jukebox_2 = new Image("jukebox_frame_2_small.png");
+                     image = jukebox_2;
+                     break;      
+               }
+               break;
+            //case: 999 //for other misc in the future
+         }
       }
       
       
