@@ -1,20 +1,3 @@
-//Puzzle Project Application
-//Written by Harrison Kairalla, Jake Bell, and Hudson Herr
-import javafx.application.*;
-import javafx.event.*;
-import javafx.stage.*;
-import javafx.scene.canvas.*;
-import javafx.scene.paint.*;
-import javafx.scene.*;
-import javafx.scene.input.*;
-import javafx.scene.layout.*;
-import java.util.*;
-import javafx.scene.control.*;
-import javafx.scene.image.*;
-import java.net.*;
-import javafx.geometry.*;
-import javafx.animation.*;
-import java.io.*;
 import javax.imageio.*;
 
 public class PuzzleProjectNewFormat extends Application
@@ -27,10 +10,13 @@ public class PuzzleProjectNewFormat extends Application
    Button b1 = new Button("Start");// Button to start the game
    Button b2 = new Button("Load");// Button to load the game
    
+   
    int x = 350; //int x for keeping track of player movement in the x (Start at x=350)
    int y = 600; //int y for keeping track of player movement in the y (Start at x=600)
    int z = 0; //int z for keeping track of the direction the player is facing
    boolean a = false; //boolean used for animating player movement (Switches between 2 states)
+   
+   
    public void start(Stage stage)
    {
       //set up root
@@ -64,15 +50,10 @@ public class PuzzleProjectNewFormat extends Application
    }
    public class PPCanvas extends Canvas
    {
-      //Instantiate graphics context "gc"
-      GraphicsContext gc = getGraphicsContext2D();
       
-      //starting file name for program
-      //String fileName = "test_format_2.txt";
-      //levelName = "menu"; //instantiate level name
-      
-      //instantiate level object
-      PPLevel level = new PPLevel();
+      GraphicsContext gc = getGraphicsContext2D(); //Instantiate gc object
+      PPLevel level = new PPLevel(); //instantiate PPLevel object
+      int count = 0;
       
       public PPCanvas()   
       {
@@ -81,24 +62,36 @@ public class PuzzleProjectNewFormat extends Application
           
          setOnKeyPressed(new KeyHandler());//Set up the KeyHandler 
          
+         /*
+         level.loadData();
+         level.draw(gc);
+         level.writeData(); 
+         */
+         
+         
          final long startTime = System.nanoTime();//Used for starting time within the animation
          new AnimationTimer() // Animation timer for animated objects 
          {
             public void handle( long currentTime)
             {
-               double half_second = (currentTime - startTime) / 500000000; //this makes it in half seconds
-
-               if( half_second % 1 == 0 ) //activates every half second 
+               level.loadData();
+               level.draw(gc);
+               level.updateData();
+               level.writeData();
+               
+               /* NOTE: MIGHT MAKE COLLISION DETECTION DIFFICULT TO ONLY DO EVERY 10 ITERATIONS, so not doing it
+               if( count % 10 == 0 ) //only runs code every 20 iterations of timer
                {
-                  //read text file to create 2D object array (load data)
+                  
+                  System.out.println( count + " " + half_second);
                   level.loadData();
-                  
-                  //check for key press, update player movement 
                   level.draw(gc);
+                  level.updateData();
+                  level.writeData();        
                   
-                  //level.updateData(); 
-                  //level.writeData();
                }
+               count ++;
+               */
                //check if character has done a switch press (update data)
                
                //call draw() on updated data (draw data)
@@ -107,7 +100,9 @@ public class PuzzleProjectNewFormat extends Application
                
             }
          }.start();
-      
+         
+         
+         
       } 
       public PPLevel getLevel()
       {
@@ -118,17 +113,19 @@ public class PuzzleProjectNewFormat extends Application
    
    public class PPLevel
    {
-      Object[][] objectArray;
-      String levelName = "menu"; //start game on menu
+      //data structures to hold level data, no constructor needed
+      Object[][] objectArray = new Object[40][40];
+      ArrayList<String> connectingRoomsArray = new ArrayList<String>();
       
-      public PPLevel()   
-      {
-         //set up 2d object array
-         objectArray = new Object[40][40];
-
-         //System.out.println( "Debug 1");
-         
-      }
+      String levelName = "menu"; //start game on menu
+      String outputFile = "outputFile.txt"; //starting output file
+      
+      /*
+      int x; //player x coordinate var
+      int y; //player y coordinate var      
+      int z=0; //int z for keeping track of the direction the player is facing
+      boolean a=false; //boolean used for animating player movement (Switches between 2 states)
+      */
       
       //load method to loadData the data from a .txt file
       public void loadData()
@@ -141,7 +138,8 @@ public class PuzzleProjectNewFormat extends Application
             {
                File inputFile = new File(levelName);
                Scanner read = new Scanner(inputFile);//scanner to read in the file
-      
+               
+               //read in object data
                for( int i=0; i<40; i++)
                {
                   for( int j=0; j<40; j++)
@@ -184,6 +182,21 @@ public class PuzzleProjectNewFormat extends Application
                   }
                  //System.out.println(); //for debugging
                }
+               
+               /*
+               //now read in the player coordinates
+               x = Integer.parseInt( read.next() );
+               y = Integer.parseInt( read.next() );
+               */
+               
+               //now read in the portal connections array
+               for( int k=0; k<4; k++)
+               {
+                  //read next num from file
+                  String connectingRoom = read.next();
+                  connectingRoomsArray.add( connectingRoom );
+               }
+               
                //System.out.println( "Debug 3");
             }
             catch(FileNotFoundException fnfe)
@@ -286,82 +299,210 @@ public class PuzzleProjectNewFormat extends Application
             gc.fillText("BY Harry, Hudson, and Jake", 500, 500);
          }
       }
-      /*
+      
       //update method to update values
       public void updateData()
       {
-         for( int i=0; i<40; i++)
+         if( levelName != "menu")
          {
-            for( int j=0; j<40; j++)
+            
+            for( int i=0; i<40; i++)
             {
-               String value = objectArray[i][j].getValue();
-               String first2Chars = ""+value.charAt(0) + value.charAt(1);
-               String frameNum = ""+ value.charAt(2);
-               
-               if( first2Chars.equals("90") )
+               for( int j=0; j<40; j++)
                {
-                  //objectArray[i][j].nextFrame(); //move jukebox to next frame
-                  if( frameNum.equals("1") )
-                     frameNum = "2";
-                  else
-                     frameNum = "1";  
-               } 
-             }  
-         }   
+                  //for every object, call the update() method, which for animated objects will push to next frame
+                  objectArray[i][j].update();
+                  
+                  /*
+                  String value = objectArray[i][j].getValue();
+                  String first2Chars = ""+value.charAt(0) + value.charAt(1);
+                  String frameNum = ""+ value.charAt(2);
+                  
+                  if( first2Chars.equals("90") )
+                  {
+                     //objectArray[i][j].nextFrame(); //move jukebox to next frame
+                     if( frameNum.equals("1") )
+                        frameNum = "2";
+                     else
+                        frameNum = "1";  
+                  } 
+                  */
+                }  
+            }
+            
+            //System.out.println( objectArray[0][0].getValue() );
+         }  
       }
+      
+      
       //write method to write the level back to the .txt file
       public void writeData()
       {
+         if( levelName != "menu")
+         {
+            //test different methods for the objects  
+            //System.out.println( objectArray[0][0].getValue() );
+            
+            //try catch to output object array to a specified text file
+            try
+            {
+               FileOutputStream fos2 = new FileOutputStream( outputFile, false); //false means that we overwrite the file
+               PrintWriter pw = new PrintWriter(fos2);
+               
+               for( int i=0; i<40; i++)
+               {
+                  for( int j=0; j<40; j++)
+                  {
+                     //System.out.print(  objectArray[i][j].getValue() + " ");
+                     pw.print( objectArray[i][j].getValue() + " " );
+                  }
+                  //System.out.println();
+                  pw.println();
+               } 
+               
+               //pw.println( x + " " + y ); //output player coordinates
+               
+               for( int k=0; k<4; k++) //output connecting rooms
+               {
+                  pw.println( connectingRoomsArray.get(k) );
+               }
+               
+               pw.close(); 
+            }
+            catch( FileNotFoundException fnfe)
+            {
+               System.out.println("fnfe exception");
+            }
+
+            
+         }
+         else
+         {
+            //System.print.ln("no write data, in menu");
+         }   
+
+      }
+      
+      /* IN CASE YOU CHANGE PLAYER MOVEMENT SYSTEM, USE THESE ACCESSORS AND MUTATORS
+      
+      //4 accessors to get Player data
+      public int getX()
+      {
+         return x;
+      }
+      public int getY()
+      {
+         return y;
+      }
+      public int getZ()
+      {
+         return z;
+      }
+      public boolean getA()
+      {
+         return a;
+      }
+      //4 mutators to change player data
+      public void setX( int x_in)
+      {
+         x = x_in;
+      }
+      public void setY( int y_in)
+      {
+         y = y_in;
+      }
+      public void setZ( int z_in)
+      {
+         z = z_in;
+      }
+      public void setA( boolean a_in)
+      {
+         a = a_in;
       }
       */
-
-      //accessor to get data at specific point
-      public int getData(int x_in, int y_in)
+      
+      //returns the current level name
+      public String getLevelName()
       {
-         return 1;//accessor to get level data at specific point
+         return levelName;
       }
+      //mutator to change the current level
       public void setLevelName( String levelName_in)
       {
          levelName = levelName_in;
          System.out.println("level changed to: " + levelName);
       } 
+      public void setOutputFile( String outputFile_in )
+      {
+         outputFile = outputFile_in;
+      }
    } 
+   
+   
    //key & button handlers
    public class KeyHandler implements EventHandler<KeyEvent>
    {
+      
       public void handle(KeyEvent event)
       {
-         if(event.getCode() == KeyCode.UP)//if up key is pressed
+         /*
+         int x = canvas.getLevel().getX();
+         int y = canvas.getLevel().getY();
+         int z = canvas.getLevel().getZ();
+         boolean a = canvas.getLevel().getA();
+         */
+         
+         String currentLevel = canvas.getLevel().getLevelName();
+         
+         if( currentLevel.equals("menu") )
          {
-            y=y-3; //move square up by subtracting y coordinate by 3
-            z=1;//used in draw method to show up movement         }
-         }
-         if(event.getCode() == KeyCode.LEFT)//if left key is pressed
-         {
-            x=x-3; //move square left by subtracting x coordinate by 3
-            z=2;//used in draw method to show left movement
-         }
-         if(event.getCode() == KeyCode.DOWN)//if down key is pressed
-         {
-            y=y+3; //move square down by adding y coordinate by 3 
-            z=3;//used in draw method to show down movement
-         }
-         if(event.getCode() == KeyCode.RIGHT)//if right key is pressed
-         {
-            x=x+3; //move square down by adding y coordinate by 3
-            z=4;//used in draw method to show right movement
-         }
-         if(a == true)//this is used to switch the boolean a between states to "animate" the player in the draw method
-         {
-          a = false;
+            System.out.println("no keys, menu open");
          }
          else
-         a = true;
-     }
-         //check for collision
-         //checkCollision(player);
-      //call draw() method?
+         {
+         
+            if(event.getCode() == KeyCode.UP)//if up key is pressed
+            {
+               y=y-3; //move square up by subtracting y coordinate by 3
+               z=1;//used in draw method to show up movement         }
+            }
+            if(event.getCode() == KeyCode.LEFT)//if left key is pressed
+            {
+               x=x-3; //move square left by subtracting x coordinate by 3
+               z=2;//used in draw method to show left movement
+            }
+            if(event.getCode() == KeyCode.DOWN)//if down key is pressed
+            {
+               y=y+3; //move square down by adding y coordinate by 3 
+               z=3;//used in draw method to show down movement
+            }
+            if(event.getCode() == KeyCode.RIGHT)//if right key is pressed
+            {
+               x=x+3; //move square down by adding y coordinate by 3
+               z=4;//used in draw method to show right movement
+            }
+            if(a == true)//this is used to switch the boolean a between states to "animate" the player in the draw method
+            {
+               a = false;
+            }
+            else
+               a = true;
+            
+            /*
+            //now that corresponding change has been made to player values, update the level player vars
+            canvas.getLevel().setX(x);
+            canvas.getLevel().setY(y);
+            canvas.getLevel().setZ(z);
+            canvas.getLevel().setA(a);
+            */
+         }
+      }
+   
+           
+          //check for collision
+          //checkCollision(player);  
    }
+   
    public class ButtonHandler implements EventHandler<ActionEvent>
    {
       public void handle( ActionEvent e)
@@ -370,10 +511,12 @@ public class PuzzleProjectNewFormat extends Application
          System.out.println( "button press");
          
          canvas.getLevel().setLevelName( "jukebox_room.txt");
+         canvas.getLevel().setOutputFile( "jukebox_room.txt"); //NOTE: maybe use this command to add functionality for loading a save state in the future
+         
          fp.getChildren().clear();
       }
    }
-
+   
    //Inheritance Section:
    public abstract class Object
    {
@@ -390,6 +533,11 @@ public class PuzzleProjectNewFormat extends Application
       public abstract Image getImage();
       public abstract int getHeight();
       public abstract int getWidth(); 
+      
+      public void update()
+      {
+         
+      }
    }
 
    public class Tile extends Object
@@ -436,6 +584,10 @@ public class PuzzleProjectNewFormat extends Application
             case "107": //grey tile4
                Image greyTile4 = new Image("Grey_Tile4.png");//107
                image = greyTile4;
+               //big tile so make size big
+               height = 160;
+               width = 160;
+               
                break;
             case "110": //brick tile
                Image brick = new Image("1Brick.png");//110
@@ -587,7 +739,7 @@ public class PuzzleProjectNewFormat extends Application
          
          switch(value)
          {
-            case "202": //empty tile
+            case "202": //wall tile
                Image metalTile = new Image("Metal_Tile.png");//2020
                image = metalTile;
                height = 80;
@@ -679,14 +831,16 @@ public class PuzzleProjectNewFormat extends Application
    
    public class Misc extends Object
    {
+      int timeCount; //used to space out the animation changes
       String frameNum;
+      String first2Chars;
       
       public Misc( String value_in )
       {
+         timeCount = 0;
          value = value_in;
          
-         String first2Chars = ""+value.charAt(0) + value.charAt(1); //only use 2 chars to allow variability in frame counter
-         
+         first2Chars = ""+value.charAt(0) + value.charAt(1); //only use 2 chars to allow variability in frame counter
          frameNum =  ""+value.charAt(2);
          
          switch( first2Chars )
@@ -725,12 +879,39 @@ public class PuzzleProjectNewFormat extends Application
       {
          return width;
       }
-      public void nextFrame() //moves animation to next frame
+      public void update() //moves animation to next frame
       {
+   
          if( frameNum.equals("1") )
             frameNum = "2";
          else
             frameNum = "1";
+         
+         value = ""+ value.charAt(0) + value.charAt(1) + frameNum;
+         
+         /* USE FOR MAKING THE UPDATE SWITCH NOT AS FREQUENTLY
+         if( first2Chars.equals("90") ) //what to do for jukebox
+         {
+            timeCount = timeCount + 1;
+            
+            System.out.println( "update called Jukebox" + timeCount);
+            
+            if( timeCount % 20 == 0) //only switch frames every 20 calls
+            {
+               timeCount = 0;
+               System.out.println( "DONE");
+               
+               if( frameNum.equals("1") )
+                  frameNum = "2";
+               else
+                  frameNum = "1";
+               
+               value = ""+ value.charAt(0) + value.charAt(1) + frameNum; //edit the value string for animation
+            }
+         }
+         */
       }
+      
    }
+   
 }
