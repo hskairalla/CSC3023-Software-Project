@@ -23,6 +23,7 @@ public class PuzzleProjectNewFormat extends Application
    PPCanvas canvas = new PPCanvas();
    FlowPane fp = new FlowPane();
    
+   
    //set up buttons
    Button b1 = new Button("Start");// Button to start the game
    Button b2 = new Button("Load");// Button to load the game
@@ -44,6 +45,7 @@ public class PuzzleProjectNewFormat extends Application
       stage.setTitle( "Puzzle Project" );
      
       //set up flow pane for menu
+      fp.setPrefWrapLength( 300);
       fp.setBackground(new Background( new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
       
       //add Canvas and FlowPane to "root" group
@@ -533,11 +535,11 @@ public class PuzzleProjectNewFormat extends Application
          //if the current room is the menu and the button is pressed, change the level to the jukebox room
          if(currentLevel.equals("menu"))
          {
-            //canvas.getLevel().setLevelName( "room1.txt");
-            //canvas.getLevel().setOutputFile( "room1.txt");
+            canvas.getLevel().setLevelName( "room1.txt");
+            canvas.getLevel().setOutputFile( "room1.txt");
             
-            canvas.getLevel().setLevelName( "jukebox_room.txt");
-            canvas.getLevel().setOutputFile( "jukebox_room.txt"); //NOTE: maybe use this command to add functionality for loading a save state in the future
+            //canvas.getLevel().setLevelName( "jukebox_room.txt");
+            //canvas.getLevel().setOutputFile( "jukebox_room.txt"); //NOTE: maybe use this command to add functionality for loading a save state in the future
             fp.getChildren().clear();
          }
          
