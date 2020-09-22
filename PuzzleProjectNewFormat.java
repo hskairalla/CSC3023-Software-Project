@@ -533,6 +533,9 @@ public class PuzzleProjectNewFormat extends Application
          //if the current room is the menu and the button is pressed, change the level to the jukebox room
          if(currentLevel.equals("menu"))
          {
+            //canvas.getLevel().setLevelName( "room1.txt");
+            //canvas.getLevel().setOutputFile( "room1.txt");
+            
             canvas.getLevel().setLevelName( "jukebox_room.txt");
             canvas.getLevel().setOutputFile( "jukebox_room.txt"); //NOTE: maybe use this command to add functionality for loading a save state in the future
             fp.getChildren().clear();
@@ -874,106 +877,106 @@ public class PuzzleProjectNewFormat extends Application
             //orange pressure plates
             case "5000":
                //orange pressure plate, square, not pressed
-               Image ppOrangeSqrNP = new Image("Orange_BU.png");
+               Image ppOrangeSqrNP = new Image("orangeBU.png");
                image = ppOrangeSqrNP;
                break;
             case "5001":
                //orange pressure plate, square, pressed
-               Image ppOrangeSqrP = new Image("Orange_BD.png");
+               Image ppOrangeSqrP = new Image("orangeBD.png");
                image = ppOrangeSqrP;
                break;
             case "5010":
                //orange pressure plate, circle, not pressed
-               //Image ppOrangeCirNP = new Image("Orange_CirU.png");
+               //Image ppOrangeCirNP = new Image("orangeCirU.png");
                //image = ppOrangeCirNP;
                break;
             case "5011":
                //orange pressure plate, circle, pressed
-               //Image ppOrangeCirP = new Image("Orange_CirD.png");
+               //Image ppOrangeCirP = new Image("orangeCirD.png");
                //image = ppOrangeCirP;
                break;
             //yellow pressure plates
             case "5100":
                //Yellow pressure plate, square, not pressed
-               Image ppYellowSqrNP = new Image("Yellow_BU.png");
+               Image ppYellowSqrNP = new Image("yellowBU.png");
                image = ppYellowSqrNP;
                break;
             case "5101":
                //Yellow pressure plate, square, pressed
-               Image ppYellowSqrP = new Image("Yellow_BD.png");
+               Image ppYellowSqrP = new Image("yellowBD.png");
                image = ppYellowSqrP;
                break;
             case "5110":
                //Yellow pressure plate, circle, not pressed
-               //Image ppYellowCirNP = new Image("Yellow_CirU.png");
+               //Image ppYellowCirNP = new Image("yellowCirU.png");
                //image = ppYellowCirNP;
                break;
             case "5111":
                //Yellow pressure plate, circle, pressed
-               //Image ppYellowCirP = new Image("Yellow_CirD.png");
+               //Image ppYellowCirP = new Image("yellowCirD.png");
                //image = ppYellowCirP;
                break;
             //Green pressure plates
             case "5200":
                //Green pressure plate, square, not pressed
-               Image ppGreenSqrNP = new Image("Green_BU.png");
+               Image ppGreenSqrNP = new Image("greenBU.png");
                image = ppGreenSqrNP;
                break;
             case "5201":
                //Green pressure plate, square, pressed
-               Image ppGreenSqrP = new Image("Green_BD.png");
+               Image ppGreenSqrP = new Image("greenBD.png");
                image = ppGreenSqrP;
                break;
             case "5210":
                //Green pressure plate, circle, not pressed
-               //Image ppGreenCirNP = new Image("Green_CirU.png");
+               //Image ppGreenCirNP = new Image("greenCirU.png");
                //image = ppGreenCirNP;
                break;
             case "5211":
                //Green pressure plate, circle, pressed
-               //Image ppGreenCirP = new Image("Green_CirD.png");
+               //Image ppGreenCirP = new Image("greenCirD.png");
                //image = ppGreenCirP;
                break;
             //blue pressure plates
             case "5300":
                //Blue pressure plate, square, not pressed
-               Image ppBlueSqrNP = new Image("Blue_BU.png");
+               Image ppBlueSqrNP = new Image("blueBU.png");
                image = ppBlueSqrNP;
                break;
             case "5301":
                //Blue pressure plate, square, pressed
-               Image ppBlueSqrP = new Image("Blue_BD.png");
+               Image ppBlueSqrP = new Image("blueBD.png");
                image = ppBlueSqrP;
                break;
             case "5310":
                //Blue pressure plate, circle, not pressed
-               //Image ppBlueCirNP = new Image("Blue_CirU.png");
+               //Image ppBlueCirNP = new Image("blueCirU.png");
                //image = ppBlueCirNP;
                break;
             case "5311":
                //Blue pressure plate, circle, pressed
-               //Image ppBlueCirP = new Image("Blue_CirD.png");
+               //Image ppBlueCirP = new Image("blueCirD.png");
                //image = ppBlueCirP;
                break;
             //purple pressure plates
             case "5400":
                //Purple pressure plate, square, not pressed
-               Image ppPurpleSqrNP = new Image("Purple_BU.png");
+               Image ppPurpleSqrNP = new Image("purpleBU.png");
                image = ppPurpleSqrNP;
                break;
             case "5401":
                //Purple pressure plate, square, pressed
-               Image ppPurpleSqrP = new Image("Purple_BD.png");
+               Image ppPurpleSqrP = new Image("purpleBD.png");
                image = ppPurpleSqrP;
                break;
             case "5410":
                //Purple pressure plate, circle, not pressed
-               //Image ppPurpleCirNP = new Image("Purple_CirU.png");
+               //Image ppPurpleCirNP = new Image("purpleCirU.png");
                //image = ppPurpleCirNP;
                break;
             case "5411":
                //Purple pressure plate, circle, pressed
-               //Image ppPurpleCirP = new Image("Purple_CirD.png");
+               //Image ppPurpleCirP = new Image("purpleCirD.png");
                //image = ppPurpleCirP;
                break;
          }    
