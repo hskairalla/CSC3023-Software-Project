@@ -26,6 +26,8 @@ public class PuzzleProjectNewFormat extends Application
    //set up buttons
    Button b1 = new Button("Start");// Button to start the game
    Button b2 = new Button("Load");// Button to load the game
+   Button b3 = new Button("Restart Area");// Button to restart the area/room
+   Button b4 = new Button("Restart Level");//Button to restart the level
    
    
    int x = 350; //int x for keeping track of player movement in the x (Start at x=350)
@@ -524,13 +526,57 @@ public class PuzzleProjectNewFormat extends Application
    {
       public void handle( ActionEvent e)
       {  
-         //if menu button pressed, change level from menu to level 1
+         //button instructions
          System.out.println( "button press");
+         String currentLevel = canvas.getLevel().getLevelName();
          
-         canvas.getLevel().setLevelName( "jukebox_room.txt");
-         canvas.getLevel().setOutputFile( "jukebox_room.txt"); //NOTE: maybe use this command to add functionality for loading a save state in the future
          
-         fp.getChildren().clear();
+         
+         
+         
+         //if the current room is the menu and the button is pressed, change the level to the jukebox room
+         if(currentLevel.equals("menu"))
+         {
+            canvas.getLevel().setLevelName( "jukebox_room.txt");
+            canvas.getLevel().setOutputFile( "jukebox_room.txt"); //NOTE: maybe use this command to add functionality for loading a save state in the future
+            fp.getChildren().clear();
+         }
+         
+         else
+         {
+            //if "Restart Area" is pressed, reset the room to the current room
+            if(e.getSource() == b3)
+            {
+               //String ln = currentLevel.getLevelName();
+               canvas.getLevel().setLevelName(currentLevel);
+               canvas.getLevel().setOutputFile(currentLevel); 
+               fp.getChildren().clear();
+            }
+            //if "Restart Level" is pressed, change the room to the jukebox room
+            else if(e.getSource() == b4)
+            {
+               //String ln = currentLevel.getLevelName();
+               canvas.getLevel().setLevelName("jukebox_room.txt");
+               canvas.getLevel().setOutputFile("jukebox_room.txt"); 
+               fp.getChildren().clear();
+            }
+            
+         }
+         
+         //add restart area/level buttons to the rooms
+         //set size of buttons and add them to the FlowPane
+         b3.setPrefSize(150, 75);
+         b4.setPrefSize(150, 75);
+         fp.getChildren().add(b3);
+         fp.getChildren().add(b4);
+         
+         b3.setFocusTraversable(false);
+         b3.setOnAction( new ButtonHandler() );
+         b4.setFocusTraversable(false);
+         b4.setOnAction( new ButtonHandler() );
+         
+         
+         
       }
    }
    
