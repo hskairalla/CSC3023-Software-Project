@@ -661,10 +661,10 @@ public class PuzzleProjectNewFormat extends Application
                Image whiteSquare = new Image("White_Square.jpg");//101
                image = whiteSquare;
                break;
-            case "102": //black/grey square
-               Image blackSquare = new Image("Black_Square.jpg");//102
-               image = blackSquare;
-               break;
+            //case "102": //black/grey square
+               //Image blackSquare = new Image("Black_Square.jpg");//102
+               //image = blackSquare;
+               //break;
             case "103": //white tile
                Image whiteTile = new Image("White_Tile.png");//103
                image = whiteTile;
