@@ -30,8 +30,8 @@ public class PuzzleProjectNewFormat extends Application
    Button b3 = new Button("Restart Area");// Button to restart the area/room
    Button b4 = new Button("Restart Level");//Button to restart the level
    
-   int x = 350; //int x for keeping track of player movement in the x (Start at x=350)
-   int y = 600; //int y for keeping track of player movement in the y (Start at x=600)
+   int x = 16; //int x for keeping track of player movement in the x (Start at x=16)(Pixel location is times 20)
+   int y = 16; //int y for keeping track of player movement in the y (Start at y=16)(Pixel location is times 20)
    int z = 0; //int z for keeping track of the direction the player is facing
    boolean a = false; //boolean used for animating player movement (Switches between 2 states)
    //booleans that tell the key handler whether the player can move or not (collison control
@@ -76,7 +76,6 @@ public class PuzzleProjectNewFormat extends Application
    }
    public class PPCanvas extends Canvas
    {
-      
       GraphicsContext gc = getGraphicsContext2D(); //Instantiate gc object
       PPLevel level = new PPLevel(); //instantiate PPLevel object
       int count = 0;
@@ -92,8 +91,7 @@ public class PuzzleProjectNewFormat extends Application
          level.loadData();
          level.draw(gc);
          level.writeData(); 
-         */
-         
+         */ 
          
          final long startTime = System.nanoTime();//Used for starting time within the animation
          new AnimationTimer() // Animation timer for animated objects 
@@ -103,8 +101,7 @@ public class PuzzleProjectNewFormat extends Application
                level.loadData();
                level.draw(gc);
                level.updateData();
-               level.writeData();
-               
+               level.writeData(); 
                /* NOTE: MIGHT MAKE COLLISION DETECTION DIFFICULT TO ONLY DO EVERY 10 ITERATIONS, so not doing it
                if( count % 10 == 0 ) //only runs code every 20 iterations of timer
                {
@@ -208,7 +205,7 @@ public class PuzzleProjectNewFormat extends Application
                   }
                  //System.out.println(); //for debugging
                }
-               //Collison Control (IN PROGRESS) SEMI FUNCTIONAL 
+               //Collison Control (IN PROGRESS) FUNCTIONS CORRECTLY(Considering making this a class with methods...) -HK  
                Set<String> names = new HashSet<String>();// set containing all object types player cant pass through
                //ADD IMPASSIBLE ITEMS BELLOW IN SAME FORMAT
                names.add("100");//black square
@@ -218,28 +215,28 @@ public class PuzzleProjectNewFormat extends Application
                //System.out.print(objectArray[((y/20))][(x/20)].getValue());//test (MIGHT NOT BE ACCURATE)
                //System.out.print("x: "+x/20+" y:"+y/20+" ");//test for displaying where character is
                //check above 
-               if(names.contains(objectArray[((y-5)/20)][(x/20)].getValue()))//check to the right of the top left of the character
+               if(names.contains(objectArray[(y-1)][x].getValue()) || names.contains(objectArray[y-1][x+1].getValue()))//for above character
                {
                   up = false;
                }
                else
                   up = true;
                //check below
-               if(names.contains(objectArray[((y+45)/20)][(x/20)].getValue()))//for below character
+               if(names.contains(objectArray[(y+2)][x].getValue()) || names.contains(objectArray[(y+2)][x+1].getValue()))//for below character
                {
                   down = false;
                }
                else
                   down = true;
                //check left
-               if(names.contains(objectArray[(y/20)][((x-5)/20)].getValue()))//for left of character
+               if(names.contains(objectArray[y][(x-1)].getValue()) || names.contains(objectArray[y+1][(x-1)].getValue()))//for left of character
                {
                   left = false;
                }
                else
                   left = true;
                //check right
-               if(names.contains(objectArray[(y/20)][((x+45)/20)].getValue()))//for right of character
+               if(names.contains(objectArray[y][(x+2)].getValue()) || names.contains(objectArray[y+1][(x+2)].getValue()))//for right of character
                {
                   right = false;
                }
@@ -309,12 +306,12 @@ public class PuzzleProjectNewFormat extends Application
                if(a == true)
                {
                   Image moveRight1 = new Image("moveRight1.png");// character moving right 1
-                  gc.drawImage(moveRight1, x, y, 40, 40);
+                  gc.drawImage(moveRight1, x*20, y*20, 40, 40);
                }
                else
                {
                   Image moveRight2 = new Image("moveRight2.png");// character moving right 2
-                  gc.drawImage(moveRight2, x, y, 40, 40);
+                  gc.drawImage(moveRight2, x*20, y*20, 40, 40);
                }
             }
             if(z == 2 || z == 3)// left arrow pressed or down arrow
@@ -322,12 +319,12 @@ public class PuzzleProjectNewFormat extends Application
                if(a == true)
                {
                   Image moveLeft1 = new Image("moveLeft1.png");// character moving left 1
-                  gc.drawImage(moveLeft1, x, y, 40, 40);
+                  gc.drawImage(moveLeft1, x*20, y*20, 40, 40);
                }
                else
                {
                   Image moveLeft2 = new Image("moveLeft2.png");// character moving left 2
-                  gc.drawImage(moveLeft2, x, y, 40, 40);
+                  gc.drawImage(moveLeft2, x*20, y*20, 40, 40);
                }
             }
             if(z == 1)//up arrow pressed
@@ -335,18 +332,18 @@ public class PuzzleProjectNewFormat extends Application
                if(a == true)
                {
                   Image moveUp1 = new Image("moveUp1.png");// character moving up 1
-                  gc.drawImage(moveUp1, x, y, 40, 40);
+                  gc.drawImage(moveUp1, x*20, y*20, 40, 40);
                }
                else
                {
                   Image moveUp2 = new Image("moveUp2.png");// character moving up 2
-                  gc.drawImage(moveUp2, x, y, 40, 40);
+                  gc.drawImage(moveUp2, x*20, y*20, 40, 40);
                }
             }
             if(z == 0)// starting position
             {
                Image moveLeft1 = new Image("moveLeft1.png");// character moving left 1
-               gc.drawImage(moveLeft1, x, y, 40, 40);
+               gc.drawImage(moveLeft1, x*20, y*20, 40, 40);
             }
          }
          else// drawing the menu if "menu" is set
@@ -525,22 +522,22 @@ public class PuzzleProjectNewFormat extends Application
          
             if(event.getCode() == KeyCode.UP && up == true)//if up key is pressed
             {
-               y=y-5; //move square up by subtracting y coordinate by 5
+               y=y-1; //move square up by subtracting y coordinate by 1
                z=1;//used in draw method to show up movement         }
             }
             if(event.getCode() == KeyCode.LEFT && left == true)//if left key is pressed
             {
-               x=x-5; //move square left by subtracting x coordinate by 5
+               x=x-1; //move square left by subtracting x coordinate by 1
                z=2;//used in draw method to show left movement
             }
             if(event.getCode() == KeyCode.DOWN && down == true)//if down key is pressed
             {
-               y=y+5; //move square down by adding y coordinate by 5 
+               y=y+1; //move square down by adding y coordinate by 1 
                z=3;//used in draw method to show down movement
             }
             if(event.getCode() == KeyCode.RIGHT && right == true)//if right key is pressed
             {
-               x=x+5; //move square down by adding y coordinate by 5
+               x=x+1; //move square down by adding y coordinate by 1
                z=4;//used in draw method to show right movement
             }
             if(a == true)//this is used to switch the boolean a between states to "animate" the player in the draw method
