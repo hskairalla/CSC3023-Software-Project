@@ -23,12 +23,12 @@ public class PuzzleProjectNewFormat extends Application
    PPCanvas canvas = new PPCanvas();
    FlowPane fp = new FlowPane();
    
+   
    //set up buttons
    Button b1 = new Button("Start");// Button to start the game
    Button b2 = new Button("Load");// Button to load the game
    Button b3 = new Button("Restart Area");// Button to restart the area/room
    Button b4 = new Button("Restart Level");//Button to restart the level
-   
    
    int x = 350; //int x for keeping track of player movement in the x (Start at x=350)
    int y = 600; //int y for keeping track of player movement in the y (Start at x=600)
@@ -45,6 +45,7 @@ public class PuzzleProjectNewFormat extends Application
       stage.setTitle( "Puzzle Project" );
      
       //set up flow pane for menu
+      fp.setPrefWrapLength( 300);
       fp.setBackground(new Background( new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
       
       //add Canvas and FlowPane to "root" group
@@ -251,7 +252,7 @@ public class PuzzleProjectNewFormat extends Application
                   }
                   else
                   {
-                     gc.drawImage( objectArray[i][j].getImage(), 20*j, 20*i, height, width);
+                     gc.drawImage( objectArray[i][j].getImage(), 20*j, 20*i, width, height);
                   }
                }
             }
@@ -526,19 +527,19 @@ public class PuzzleProjectNewFormat extends Application
    {
       public void handle( ActionEvent e)
       {  
+                  
          //button instructions
          System.out.println( "button press");
          String currentLevel = canvas.getLevel().getLevelName();
          
-         
-         
-         
-         
          //if the current room is the menu and the button is pressed, change the level to the jukebox room
          if(currentLevel.equals("menu"))
          {
-            canvas.getLevel().setLevelName( "jukebox_room.txt");
-            canvas.getLevel().setOutputFile( "jukebox_room.txt"); //NOTE: maybe use this command to add functionality for loading a save state in the future
+            canvas.getLevel().setLevelName( "room1.txt");
+            canvas.getLevel().setOutputFile( "room1.txt");
+            
+            //canvas.getLevel().setLevelName( "jukebox_room.txt");
+            //canvas.getLevel().setOutputFile( "jukebox_room.txt"); //NOTE: maybe use this command to add functionality for loading a save state in the future
             fp.getChildren().clear();
          }
          
@@ -561,8 +562,7 @@ public class PuzzleProjectNewFormat extends Application
                fp.getChildren().clear();
             }
             
-         }
-         
+         } 
          //add restart area/level buttons to the rooms
          //set size of buttons and add them to the FlowPane
          b3.setPrefSize(150, 75);
@@ -576,7 +576,6 @@ public class PuzzleProjectNewFormat extends Application
          b4.setOnAction( new ButtonHandler() );
          
          
-         
       }
    }
    
@@ -584,8 +583,8 @@ public class PuzzleProjectNewFormat extends Application
    public abstract class Object
    {
       String value;
-      int height = 20; //protected?
-      int width = 20;
+      int height = 80; //protected?
+      int width = 80;
       Image image;
    
       public Object()
@@ -615,6 +614,8 @@ public class PuzzleProjectNewFormat extends Application
             case "100": //empty tile
                //Image emptySquare = new Image("Empty_Square.jpg");//100
                //image = emptySquare;
+               height = 20;
+               width = 20;
                break;
             case "101": //white square
                Image whiteSquare = new Image("White_Square.jpg");//101
@@ -627,14 +628,10 @@ public class PuzzleProjectNewFormat extends Application
             case "103": //white tile
                Image whiteTile = new Image("White_Tile.png");//103
                image = whiteTile;
-               height = 80;
-               width = 80;
                break;
             case "104": //black tile
                Image blackTile = new Image("Black_Tile.png");//104
                image = blackTile;
-               height = 80;
-               width = 80;
                break;
             case "105": //metal tile
                Image metalTile = new Image("Metal_Tile.png");//105
@@ -647,7 +644,7 @@ public class PuzzleProjectNewFormat extends Application
             case "107": //grey tile4
                Image greyTile4 = new Image("Grey_Tile4.png");//107
                image = greyTile4;
-               //big tile so make size big
+               //big tile so make h&w big
                height = 160;
                width = 160;
                
@@ -727,6 +724,131 @@ public class PuzzleProjectNewFormat extends Application
       public Spike( String value_in )
       {
          value = value_in;
+         String first2Chars = ""+value.charAt(0)+value.charAt(1); 
+         String orientation = ""+value.charAt(2);
+         String isActive = ""+ value.charAt(3);
+         
+         //set dimensions based on orientation
+         if( orientation.equals("0") )
+         {
+            height = 20;
+            width = 80;
+         }
+         if( orientation.equals("1") )
+         {
+            height = 80;
+            width = 20;
+            
+         }
+         //set image based on value numbers
+         switch( value )
+         {
+            //orange spikes
+            case "4000":
+               //orange spike, horizontal, not active
+               Image spikeOrangeHorNA = new Image("orangeHole.png");
+               image = spikeOrangeHorNA;
+               break;
+            case "4001":
+               //orange spike, horizontal, active
+               Image spikeOrangeHorA = new Image("orangeSpike.png");
+               image = spikeOrangeHorA;
+               break;
+            case "4010":
+               //orange spike, vertical, not active
+               Image spikeOrangeVertNA = new Image("orangeHoleR.png");
+               image = spikeOrangeVertNA;
+               break;
+            case "4011":
+               //orange spike, vertical, active
+               Image spikeOrangeVertA = new Image("orangeSpikeR.png");
+               image = spikeOrangeVertA;
+               break;
+            //yellow spikes
+            case "4100":
+               //yellow spike, horizontal, not active
+               Image spikeYellowHorNA = new Image("YellowHole.png");
+               image = spikeYellowHorNA;
+               break;
+            case "4101":
+               //Yellow spike, horizontal, active
+               Image spikeYellowHorA = new Image("YellowSpike.png");
+               image = spikeYellowHorA;
+               break;
+            case "4110":
+               //Yellow spike, vertical, not active
+               Image spikeYellowVertNA = new Image("YellowHoleR.png");
+               image = spikeYellowVertNA;
+               break;
+            case "4111":
+               //Yellow spike, vertical, active
+               Image spikeYellowVertA = new Image("YellowSpikeR.png");
+               image = spikeYellowVertA;
+               break;
+            //Green spikes
+            case "4200":
+               //Green spike, horizontal, not active
+               Image spikeGreenHorNA = new Image("GreenHole.png");
+               image = spikeGreenHorNA;
+               break;
+            case "4201":
+               //Green spike, horizontal, active
+               Image spikeGreenHorA = new Image("GreenSpike.png");
+               image = spikeGreenHorA;
+               break;
+            case "4210":
+               //Green spike, vertical, not active
+               Image spikeGreenVertNA = new Image("GreenHoleR.png");
+               image = spikeGreenVertNA;
+               break;
+            case "4211":
+               //Green spike, vertical, active
+               Image spikeGreenVertA = new Image("GreenSpikeR");
+               image = spikeGreenVertA;
+               break;
+            //blue spikes
+            case "4300":
+               //Blue spike, horizontal, not active
+               Image spikeBlueHorNA = new Image("BlueHole.png");
+               image = spikeBlueHorNA;
+               break;
+            case "4301":
+               //Blue spike, horizontal, active
+               Image spikeBlueHorA = new Image("BlueSpike.png");
+               image = spikeBlueHorA;
+               break;
+            case "4310":
+               //Blue spike, vertical, not active
+               Image spikeBlueVertNA = new Image("BlueHoleR.png");
+               image = spikeBlueVertNA;
+               break;
+            case "4311":
+               //Blue spike, vertical, active
+               Image spikeBlueVertA = new Image("BlueSpikeR.png");
+               image = spikeBlueVertA;
+               break;
+            //purple spikes
+            case "4400":
+               //Purple spike, horizontal, not active
+               Image spikePurpleHorNA = new Image("PurpleHole.png");
+               image = spikePurpleHorNA;
+               break;
+            case "4401":
+               //Purple spike, horizontal, active
+               Image spikePurpleHorA = new Image("PurpleSpike.png");
+               image = spikePurpleHorA;
+               break;
+            case "4410":
+               //Purple spike, vertical, not active
+               Image spikePurpleVertNA = new Image("PurpleHoleR.png");
+               image = spikePurpleVertNA;
+               break;
+            case "4411":
+               //Purple spike, vertical, active
+               Image spikePurpleVertA = new Image("PurpleSpikeR.png");
+               image = spikePurpleVertA;
+               break;
+         }
       }
       public String getValue()
       {
@@ -751,6 +873,115 @@ public class PuzzleProjectNewFormat extends Application
       public PressurePlate( String value_in )
       {
          value = value_in;
+         
+         switch( value)
+         {
+            //orange pressure plates
+            case "5000":
+               //orange pressure plate, square, not pressed
+               Image ppOrangeSqrNP = new Image("orangeBU.png");
+               image = ppOrangeSqrNP;
+               break;
+            case "5001":
+               //orange pressure plate, square, pressed
+               Image ppOrangeSqrP = new Image("orangeBD.png");
+               image = ppOrangeSqrP;
+               break;
+            case "5010":
+               //orange pressure plate, circle, not pressed
+               //Image ppOrangeCirNP = new Image("orangeCirU.png");
+               //image = ppOrangeCirNP;
+               break;
+            case "5011":
+               //orange pressure plate, circle, pressed
+               //Image ppOrangeCirP = new Image("orangeCirD.png");
+               //image = ppOrangeCirP;
+               break;
+            //yellow pressure plates
+            case "5100":
+               //Yellow pressure plate, square, not pressed
+               Image ppYellowSqrNP = new Image("yellowBU.png");
+               image = ppYellowSqrNP;
+               break;
+            case "5101":
+               //Yellow pressure plate, square, pressed
+               Image ppYellowSqrP = new Image("yellowBD.png");
+               image = ppYellowSqrP;
+               break;
+            case "5110":
+               //Yellow pressure plate, circle, not pressed
+               //Image ppYellowCirNP = new Image("yellowCirU.png");
+               //image = ppYellowCirNP;
+               break;
+            case "5111":
+               //Yellow pressure plate, circle, pressed
+               //Image ppYellowCirP = new Image("yellowCirD.png");
+               //image = ppYellowCirP;
+               break;
+            //Green pressure plates
+            case "5200":
+               //Green pressure plate, square, not pressed
+               Image ppGreenSqrNP = new Image("greenBU.png");
+               image = ppGreenSqrNP;
+               break;
+            case "5201":
+               //Green pressure plate, square, pressed
+               Image ppGreenSqrP = new Image("greenBD.png");
+               image = ppGreenSqrP;
+               break;
+            case "5210":
+               //Green pressure plate, circle, not pressed
+               //Image ppGreenCirNP = new Image("greenCirU.png");
+               //image = ppGreenCirNP;
+               break;
+            case "5211":
+               //Green pressure plate, circle, pressed
+               //Image ppGreenCirP = new Image("greenCirD.png");
+               //image = ppGreenCirP;
+               break;
+            //blue pressure plates
+            case "5300":
+               //Blue pressure plate, square, not pressed
+               Image ppBlueSqrNP = new Image("blueBU.png");
+               image = ppBlueSqrNP;
+               break;
+            case "5301":
+               //Blue pressure plate, square, pressed
+               Image ppBlueSqrP = new Image("blueBD.png");
+               image = ppBlueSqrP;
+               break;
+            case "5310":
+               //Blue pressure plate, circle, not pressed
+               //Image ppBlueCirNP = new Image("blueCirU.png");
+               //image = ppBlueCirNP;
+               break;
+            case "5311":
+               //Blue pressure plate, circle, pressed
+               //Image ppBlueCirP = new Image("blueCirD.png");
+               //image = ppBlueCirP;
+               break;
+            //purple pressure plates
+            case "5400":
+               //Purple pressure plate, square, not pressed
+               Image ppPurpleSqrNP = new Image("purpleBU.png");
+               image = ppPurpleSqrNP;
+               break;
+            case "5401":
+               //Purple pressure plate, square, pressed
+               Image ppPurpleSqrP = new Image("purpleBD.png");
+               image = ppPurpleSqrP;
+               break;
+            case "5410":
+               //Purple pressure plate, circle, not pressed
+               //Image ppPurpleCirNP = new Image("purpleCirU.png");
+               //image = ppPurpleCirNP;
+               break;
+            case "5411":
+               //Purple pressure plate, circle, pressed
+               //Image ppPurpleCirP = new Image("purpleCirD.png");
+               //image = ppPurpleCirP;
+               break;
+         }    
       }
       public String getValue()
       {
@@ -775,6 +1006,51 @@ public class PuzzleProjectNewFormat extends Application
       public Spring( String value_in )
       {
          value = value_in;
+        
+         switch( value)
+         {
+            case "600":
+               //north, not active
+               Image springNActivated = new Image("springTileActivated.png");
+               image = springNActivated;
+               break;
+            case "601":
+               //north, active
+               Image springNActive = new Image( "springTileNS.png");
+               image = springNActive;
+               break;
+            case "610":
+               //west, not active
+               Image springWActivated = new Image("springTileActivated.png");
+               image = springWActivated;
+               break;
+            case "611": 
+               //west, active
+               Image springWActive = new Image( "springTileWE.png");
+               image = springWActive;
+               break;
+            case "620":
+               //south, not active
+               Image springSActivated = new Image("springTileActivated.png");
+               image = springSActivated;break;
+            case "621":
+               //south, active
+               Image springSActive = new Image( "springTileNS.png");
+               image = springSActive;
+               break;
+            case "630":
+               //east, not active
+               Image springEActivated = new Image("springTileActivated.png");
+               image = springEActivated;
+               break;
+            case "631":
+               //east, active
+               Image springEActive = new Image( "springTileWE.png");
+               image = springEActive;
+               break;
+         }
+         
+         
       }
       public String getValue()
       {
@@ -800,15 +1076,16 @@ public class PuzzleProjectNewFormat extends Application
       {
          value = value_in;
          
-         switch(value)
-         {
-            case "202": //wall tile
-               Image metalTile = new Image("Metal_Tile.png");//2020
-               image = metalTile;
-               height = 80;
-               width = 80;
-               break;
-         }
+         Image wall = new Image( "Metal_Tile.png"); //3##
+         image = wall;
+         
+         //pull out wall dimensions from value 
+         int wallHeight = Integer.parseInt( ""+value.charAt(1) );
+         int wallWidth = Integer.parseInt( ""+value.charAt(2) );
+         //set wall dimensions
+         height = 20*wallHeight;
+         width = 20*wallWidth;
+  
       }
      
       public String getValue()
@@ -836,16 +1113,26 @@ public class PuzzleProjectNewFormat extends Application
       public Portal( String value_in )
       {
          value = value_in;
-         height = 40;
+         height = 60;
          width = 40;
          
-         String first2Chars = ""+value.charAt(0) + value.charAt(1);
-         
-         switch( first2Chars)
+         switch( value )
          {
-            case "80": //Up Portal
-               Image upPortal = new Image("uparrow.png");//21
+            case "800": //Up Portal
+               Image upPortal = new Image("arrowUp.png");//21
                image = upPortal;
+               break;
+            case "801": //Left Portal
+               Image leftPortal = new Image("arrowLeft.png");//21
+               image = leftPortal;
+               break;
+            case "802": //Down Portal
+               Image downPortal = new Image("arrowDown.png");//21
+               image = downPortal;
+               break;
+            case "803": //Right Portal
+               Image rightPortal = new Image("arrowRight.png");//21
+               image = rightPortal;
                break;
          }
       }
