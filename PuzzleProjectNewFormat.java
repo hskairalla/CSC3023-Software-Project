@@ -34,6 +34,12 @@ public class PuzzleProjectNewFormat extends Application
    int y = 600; //int y for keeping track of player movement in the y (Start at x=600)
    int z = 0; //int z for keeping track of the direction the player is facing
    boolean a = false; //boolean used for animating player movement (Switches between 2 states)
+   //booleans that tell the key handler whether the player can move or not (collison control
+   boolean up = true;
+   boolean down = true;
+   boolean left = true;
+   boolean right = true;
+
    
    
    public void start(Stage stage)
@@ -202,7 +208,43 @@ public class PuzzleProjectNewFormat extends Application
                   }
                  //System.out.println(); //for debugging
                }
-               
+               //Collison Control (IN PROGRESS) SEMI FUNCTIONAL 
+               Set<String> names = new HashSet<String>();// set containing all object types player cant pass through
+               //ADD IMPASSIBLE ITEMS BELLOW IN SAME FORMAT
+               names.add("100");//black square
+               names.add("202");//metal tile
+               names.add("222");//blank space NON-TRAVERABLE
+               //Code below is used for testing where you are and what the value the object you are standing on is
+               //System.out.print(objectArray[((y/20))][(x/20)].getValue());//test (MIGHT NOT BE ACCURATE)
+               //System.out.print("x: "+x/20+" y:"+y/20+" ");//test for displaying where character is
+               //check above 
+               if(names.contains(objectArray[((y-5)/20)][(x/20)].getValue()))//check to the right of the top left of the character
+               {
+                  up = false;
+               }
+               else
+                  up = true;
+               //check below
+               if(names.contains(objectArray[((y+45)/20)][(x/20)].getValue()))//for below character
+               {
+                  down = false;
+               }
+               else
+                  down = true;
+               //check left
+               if(names.contains(objectArray[(y/20)][((x-5)/20)].getValue()))//for left of character
+               {
+                  left = false;
+               }
+               else
+                  left = true;
+               //check right
+               if(names.contains(objectArray[(y/20)][((x+45)/20)].getValue()))//for right of character
+               {
+                  right = false;
+               }
+               else
+                  right = true;
                /*
                //now read in the player coordinates
                x = Integer.parseInt( read.next() );
@@ -481,24 +523,24 @@ public class PuzzleProjectNewFormat extends Application
          else
          {
          
-            if(event.getCode() == KeyCode.UP)//if up key is pressed
+            if(event.getCode() == KeyCode.UP && up == true)//if up key is pressed
             {
-               y=y-3; //move square up by subtracting y coordinate by 3
+               y=y-5; //move square up by subtracting y coordinate by 5
                z=1;//used in draw method to show up movement         }
             }
-            if(event.getCode() == KeyCode.LEFT)//if left key is pressed
+            if(event.getCode() == KeyCode.LEFT && left == true)//if left key is pressed
             {
-               x=x-3; //move square left by subtracting x coordinate by 3
+               x=x-5; //move square left by subtracting x coordinate by 5
                z=2;//used in draw method to show left movement
             }
-            if(event.getCode() == KeyCode.DOWN)//if down key is pressed
+            if(event.getCode() == KeyCode.DOWN && down == true)//if down key is pressed
             {
-               y=y+3; //move square down by adding y coordinate by 3 
+               y=y+5; //move square down by adding y coordinate by 5 
                z=3;//used in draw method to show down movement
             }
-            if(event.getCode() == KeyCode.RIGHT)//if right key is pressed
+            if(event.getCode() == KeyCode.RIGHT && right == true)//if right key is pressed
             {
-               x=x+3; //move square down by adding y coordinate by 3
+               x=x+5; //move square down by adding y coordinate by 5
                z=4;//used in draw method to show right movement
             }
             if(a == true)//this is used to switch the boolean a between states to "animate" the player in the draw method
