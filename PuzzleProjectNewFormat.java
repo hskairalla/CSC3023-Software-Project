@@ -211,6 +211,7 @@ public class PuzzleProjectNewFormat extends Application
                names.add("100");//black square
                names.add("202");//metal tile
                names.add("222");//blank space NON-TRAVERABLE
+               names.add("901");//Jukebox
                //Code below is used for testing where you are and what the value the object you are standing on is
                //System.out.print(objectArray[((y/20))][(x/20)].getValue());//test (MIGHT NOT BE ACCURATE)
                //System.out.print("x: "+x/20+" y:"+y/20+" ");//test for displaying where character is
