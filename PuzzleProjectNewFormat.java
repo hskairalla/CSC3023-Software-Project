@@ -30,8 +30,8 @@ public class PuzzleProjectNewFormat extends Application
    Button b3 = new Button("Restart Area");// Button to restart the area/room
    Button b4 = new Button("Restart Level");//Button to restart the level
    
-   int x = 16; //int x for keeping track of player movement in the x (Start at x=16)(Pixel location is times 20)
-   int y = 16; //int y for keeping track of player movement in the y (Start at y=16)(Pixel location is times 20)
+   int x = 17; //int x for keeping track of player movement in the x (Start at x=16)(Pixel location is times 20)
+   int y = 29; //int y for keeping track of player movement in the y (Start at y=16)(Pixel location is times 20)
    int z = 0; //int z for keeping track of the direction the player is facing
    boolean a = false; //boolean used for animating player movement (Switches between 2 states)
    //booleans that tell the key handler whether the player can move or not (collison control
@@ -100,21 +100,18 @@ public class PuzzleProjectNewFormat extends Application
             {
                level.loadData();
                level.draw(gc);
-               level.updateData();
-               level.writeData(); 
-               /* NOTE: MIGHT MAKE COLLISION DETECTION DIFFICULT TO ONLY DO EVERY 10 ITERATIONS, so not doing it
-               if( count % 10 == 0 ) //only runs code every 20 iterations of timer
+               level.writeData();
+                
+               // NOTE: MIGHT MAKE COLLISION DETECTION DIFFICULT TO ONLY DO EVERY 10 ITERATIONS, so not doing it
+               if( count % 20 == 0 ) //only runs code every 20 iterations of timer
                {
                   
-                  System.out.println( count + " " + half_second);
-                  level.loadData();
-                  level.draw(gc);
-                  level.updateData();
-                  level.writeData();        
+                  //System.out.println( count/20);
+                  level.updateData();           
                   
                }
                count ++;
-               */
+               
                //check if character has done a switch press (update data)
                
                //call draw() on updated data (draw data)
@@ -123,8 +120,6 @@ public class PuzzleProjectNewFormat extends Application
                
             }
          }.start();
-         
-         
          
       } 
       public PPLevel getLevel()
@@ -138,7 +133,7 @@ public class PuzzleProjectNewFormat extends Application
    {
       //data structures to hold level data, no constructor needed
       Object[][] objectArray = new Object[40][40];
-      ArrayList<String> connectingRoomsArray = new ArrayList<String>();
+      String [] connectingRoomsArray = new String[4];
       
       String levelName = "menu"; //start game on menu
       String outputFile = "outputFile.txt"; //starting output file
@@ -177,7 +172,7 @@ public class PuzzleProjectNewFormat extends Application
                            objectArray[i][j] = new Tile(value);
                            break;
                         case '2': //value is RaisedTile
-                           objectArray[i][j] = new RaisedTile(value);
+                           objectArray[i][j] = new ObjectCollision(value);
                            break;
                         case '3': //value is Wall
                            objectArray[i][j] = new Wall(value);
@@ -205,6 +200,17 @@ public class PuzzleProjectNewFormat extends Application
                   }
                  //System.out.println(); //for debugging
                }
+               
+               //now read in the portal connections array
+               for( int k=0; k<4; k++)
+               {
+                  //read next num from file
+                  String connectingRoom = read.next();
+                  connectingRoomsArray[k] = connectingRoom;
+                  //System.out.print( connectingRoom + " ");
+               }
+               //System.out.println();
+               
                //Collison Control (IN PROGRESS) FUNCTIONS CORRECTLY(Considering making this a class with methods...) -HK  
                Set<String> names = new HashSet<String>();// set containing all object types player cant pass through
                //ADD IMPASSIBLE ITEMS BELLOW IN SAME FORMAT
@@ -213,6 +219,14 @@ public class PuzzleProjectNewFormat extends Application
                names.add("222");//blank space NON-TRAVERABLE
                names.add("901");//Jukebox
                names.add("324");//metal wall tile
+               names.add("319"); //walls of diff. sizes
+               names.add("318");
+               names.add("331");
+               names.add("321");
+               names.add("311");
+               //add values for spikes that are up
+               
+               
                //Code below is used for testing where you are and what the value the object you are standing on is
                //System.out.print(objectArray[((y/20))][(x/20)].getValue());//test (MIGHT NOT BE ACCURATE)
                //System.out.print("x: "+x/20+" y:"+y/20+" ");//test for displaying where character is
@@ -250,13 +264,6 @@ public class PuzzleProjectNewFormat extends Application
                y = Integer.parseInt( read.next() );
                */
                
-               //now read in the portal connections array
-               for( int k=0; k<4; k++)
-               {
-                  //read next num from file
-                  String connectingRoom = read.next();
-                  connectingRoomsArray.add( connectingRoom );
-               }
                
                //System.out.println( "Debug 3");
             }
@@ -276,6 +283,10 @@ public class PuzzleProjectNewFormat extends Application
       {
          if( levelName != "menu")
          {
+            //do the background color
+            gc.setFill(Color.GREY);
+            gc.fillRect(0, 0, 800, 800);
+            
             //read from the 2D object array and based on data draw the level
             for( int i=0; i<40; i++)
             {
@@ -298,8 +309,7 @@ public class PuzzleProjectNewFormat extends Application
                }
             }
 
-            gc.setFill(Color.WHITE);
-            //gc.fillRect(x, y, 40, 40);
+            
             
             //Switching between images to "animate" the player based on int Z and boolean a
             //boolean a swtiches every key press, int z switches based on which key is pressed
@@ -373,21 +383,6 @@ public class PuzzleProjectNewFormat extends Application
                {
                   //for every object, call the update() method, which for animated objects will push to next frame
                   objectArray[i][j].update();
-                  
-                  /*
-                  String value = objectArray[i][j].getValue();
-                  String first2Chars = ""+value.charAt(0) + value.charAt(1);
-                  String frameNum = ""+ value.charAt(2);
-                  
-                  if( first2Chars.equals("90") )
-                  {
-                     //objectArray[i][j].nextFrame(); //move jukebox to next frame
-                     if( frameNum.equals("1") )
-                        frameNum = "2";
-                     else
-                        frameNum = "1";  
-                  } 
-                  */
                 }  
             }
             
@@ -425,7 +420,7 @@ public class PuzzleProjectNewFormat extends Application
                
                for( int k=0; k<4; k++) //output connecting rooms
                {
-                  pw.println( connectingRoomsArray.get(k) );
+                  pw.println( connectingRoomsArray[k] );
                }
                
                pw.close(); 
@@ -444,44 +439,6 @@ public class PuzzleProjectNewFormat extends Application
 
       }
       
-      /* IN CASE YOU CHANGE PLAYER MOVEMENT SYSTEM, USE THESE ACCESSORS AND MUTATORS
-      
-      //4 accessors to get Player data
-      public int getX()
-      {
-         return x;
-      }
-      public int getY()
-      {
-         return y;
-      }
-      public int getZ()
-      {
-         return z;
-      }
-      public boolean getA()
-      {
-         return a;
-      }
-      //4 mutators to change player data
-      public void setX( int x_in)
-      {
-         x = x_in;
-      }
-      public void setY( int y_in)
-      {
-         y = y_in;
-      }
-      public void setZ( int z_in)
-      {
-         z = z_in;
-      }
-      public void setA( boolean a_in)
-      {
-         a = a_in;
-      }
-      */
-      
       //returns the current level name
       public String getLevelName()
       {
@@ -496,6 +453,147 @@ public class PuzzleProjectNewFormat extends Application
       public void setOutputFile( String outputFile_in )
       {
          outputFile = outputFile_in;
+      }
+      //method to change the current level
+      public void changeLevel( String newFile)
+      {
+         levelName = newFile;
+         outputFile = newFile;
+         //set starting player coordinates
+         switch( newFile)
+         {
+            case "jukebox_room.txt":
+               x = 17;
+               y = 29;
+               z = 0;
+               a = false;
+               break;
+            case "room1.txt":
+               x = 18;
+               y = 31;
+               z = 0;
+               a = false;
+               break;
+            case "room2.txt":
+               x = 18;
+               y = 25;
+               z = 0;
+               a = false;
+               break; 
+         }
+         loadData();
+      }
+      
+      //collision detection methods, broad phase and narrow phase RETURN TRUE IF COLLISION PRESENT, FALSE IF NO COLLISIONS
+      public boolean collisionCheck()
+      {
+         //read in the area where the player is, as well as the area around it, into an array (size 6x6)
+         //System.out.println( objectArray[y][x].getValue());
+         
+         //Object[][] collisionArray = new Object[4][4];
+         
+         
+         System.out.println("broad phase collision");
+         //nested for loops to test each value
+         for( int i=0; i<5; i++)
+         {
+            for( int j=0; j<5; j++)
+            {
+               int yval = y-3+i;
+               int xval = x-3+j;
+               //System.out.print( xval + " " + yval + " "); //xval +" " + yval);
+               System.out.print( objectArray[yval][xval].getValue() +" " );
+               
+               
+               //get object in question's bounds for use in collision algorithm
+               int objectX = xval;
+               int objectY = yval;
+               int objectHeight = objectArray[yval][xval].getHeight() / 20; //divide by 20 to get numerical values
+               int objectWidth = objectArray[yval][xval].getWidth() / 20;
+               //get player bounds
+               int playerX = x; 
+               int playerY = y;
+               int playerHeight = 40 / 20;
+               int playerWidth = 40 / 20;
+               
+               //NARROW PHASE COLLISION SECTION 
+                              
+               //check the object's 1st num to see if it is a special object
+               String value = objectArray[yval][xval].getValue();
+               String firstChar = ""+ value.charAt(0);
+               switch( firstChar)
+               {
+                  case "5": //pressure plate (button)
+                     //means that there is a pressure plate in the area
+                     if (playerX < objectX + objectWidth &&
+                        playerX + playerWidth > objectX &&
+                        playerY < objectY + objectHeight &&
+                        playerY + playerHeight > objectY)
+                     {   
+                        System.out.println( "player has collided with a pressure plate");
+                        
+                        String lastChar = ""+value.charAt(3);
+                        if( lastChar.equals("0") )
+                           lastChar = "1";
+                        else
+                           lastChar = "0";
+                        
+                     }
+                     break;
+                  case "6": //spring
+                     break;
+                  case "8": //portal
+                     if (playerX < objectX + objectWidth &&
+                        playerX + playerWidth > objectX &&
+                        playerY < objectY + objectHeight &&
+                        playerY + playerHeight > objectY)
+                     {   
+                        System.out.println( "player has collided with a portal");
+                        //now determine where to move player based on connectingRoomsArray
+                        switch( value )
+                        {
+                           case "800": //up arrow
+                              System.out.println( "old file:" + levelName);
+                              changeLevel( connectingRoomsArray[0]);
+                              System.out.println( "new file:" + levelName);
+                              break;
+                           case "801": //left arrow
+                              System.out.println( "old file:" + levelName);
+                              changeLevel( connectingRoomsArray[1]);
+                              System.out.println( "new file:" + levelName);
+                              break;
+                           case "802": //down arrow
+                              System.out.println( "old file:" + levelName);
+                              changeLevel( connectingRoomsArray[2]);
+                              System.out.println( "new file:" + levelName);
+                              break;
+                           case "803": //right arrow
+                              System.out.println( "old file:" + levelName);
+                              changeLevel( connectingRoomsArray[3]);
+                              System.out.println( "new file:" + levelName);
+                              break;
+                              
+                              
+                        }
+                     }
+                     break;
+                  case "9": //screwdriver
+                     break;
+               }
+               
+            }
+            System.out.println();
+         }
+         
+         
+         //check each value in array to see if it is a potential collision object
+         
+         //call narrowPhaseCollision on all potential collisions
+         return false;
+      }
+      public boolean narrowPhaseCollision()
+      {
+         return false;
       }
    } 
    
@@ -549,19 +647,12 @@ public class PuzzleProjectNewFormat extends Application
             else
                a = true;
             
-            /*
-            //now that corresponding change has been made to player values, update the level player vars
-            canvas.getLevel().setX(x);
-            canvas.getLevel().setY(y);
-            canvas.getLevel().setZ(z);
-            canvas.getLevel().setA(a);
-            */
+            //////// COLLISION CHECK FOR SPECIAL OBJECTS -Jake
+            
+            //after movement, check to see if in range of notable object, and make appropriate changes (buttons, spikes, springs)
+            canvas.getLevel().collisionCheck();
          }
       }
-   
-           
-          //check for collision
-          //checkCollision(player);  
    }
    
    public class ButtonHandler implements EventHandler<ActionEvent>
@@ -576,11 +667,10 @@ public class PuzzleProjectNewFormat extends Application
          //if the current room is the menu and the button is pressed, change the level to the jukebox room
          if(currentLevel.equals("menu"))
          {
-            canvas.getLevel().setLevelName( "room1.txt");
-            canvas.getLevel().setOutputFile( "room1.txt");
-            
-            //canvas.getLevel().setLevelName( "jukebox_room.txt");
-            //canvas.getLevel().setOutputFile( "jukebox_room.txt"); //NOTE: maybe use this command to add functionality for loading a save state in the future
+            //canvas.getLevel().setLevelName( "collisionPracticeRoom.txt");
+            //canvas.getLevel().setOutputFile( "collisionPracticeRoom.txt");
+            canvas.getLevel().setLevelName( "jukebox_room.txt");
+            canvas.getLevel().setOutputFile( "jukebox_room.txt"); //NOTE: maybe use this command to add functionality for loading a save state in the future
             fp.getChildren().clear();
          }
          
@@ -620,23 +710,35 @@ public class PuzzleProjectNewFormat extends Application
       }
    }
    
+    
    //Inheritance Section:
    public abstract class Object
    {
       String value;
-      int height = 80; //protected?
+      int height = 80;
       int width = 80;
       Image image;
    
       public Object()
       {
       }
-      //abstract methods
-      public abstract String getValue();
-      public abstract Image getImage();
-      public abstract int getHeight();
-      public abstract int getWidth(); 
-      
+      //methods
+      public String getValue()
+      {
+         return value;
+      }
+      public Image getImage()
+      {
+         return image;
+      }
+      public int getHeight()
+      {
+         return height;
+      }
+      public int getWidth()
+      {
+         return width; 
+      }
       public void update()
       {
          
@@ -662,10 +764,10 @@ public class PuzzleProjectNewFormat extends Application
                Image whiteSquare = new Image("White_Square.jpg");//101
                image = whiteSquare;
                break;
-            //case "102": //black/grey square
-               //Image blackSquare = new Image("Black_Square.jpg");//102
-               //image = blackSquare;
-               //break;
+            case "102": //black/grey square
+               Image blackSquare = new Image("Black_Square.jpg");//102
+               image = blackSquare;
+               break;
             case "103": //white tile
                Image whiteTile = new Image("White_Tile.png");//103
                image = whiteTile;
@@ -674,9 +776,9 @@ public class PuzzleProjectNewFormat extends Application
                Image blackTile = new Image("Black_Tile.png");//104
                image = blackTile;
                break;
-            case "105": //metal tile
-               Image metalTile = new Image("Metal_Tile.png");//105
-               image = metalTile;
+            case "105": //stone tile
+               Image stoneTile = new Image("Cobblestone_Tile.png");//105
+               image = stoneTile;
                break;
             case "106": //grey tile
                Image greyTile = new Image("Grey_Tile.png");//106
@@ -687,76 +789,47 @@ public class PuzzleProjectNewFormat extends Application
                image = greyTile4;
                //big tile so make h&w big
                height = 160;
+               width = 160; 
+               break;
+            case "108": //grey tile 1x4
+               Image greyTile1x4 = new Image("Grey_Tile1x4.png"); //108
+               image = greyTile1x4;
+               height = 20;
+               width = 80;
+               break;
+            case "109": //grey tile 4x8
+               Image greyTile4x8 = new Image("Grey_Tile4x8.png");
+               image = greyTile4x8;
+               height = 80;
                width = 160;
-               
                break;
             case "110": //brick tile
                Image brick = new Image("1Brick.png");//110
                image = brick;
                break;
-            case "111": //grey brick tile
-               //image = greyBrick;
+            case "111": //stone tile 3x8
+               Image stoneTile3x8 = new Image("Cobblestone_Tile.png");//111
+               image = stoneTile3x8;
+               height = 60;
+               width = 180;
                break;
-            /*   
-            case "108": //half metal tile
-               image = halfMetalTile;
+            case "112": //stone tile 1x6
+               Image stoneTile1x6 = new Image("Cobblestone_Tile.png"); //112
+               image = stoneTile1x6;
+               height = 20;
+               width = 120;
                break;
-            case "109": //half grey tile
-               image = greyGrey4;
-               break;
-            */
+           
          }      
-      }
-      public String getValue() //returns original value #
-      {
-         return value;
-      }
-      public Image getImage() //returns corresponding image
-      {
-         return image;
-      }
-      public int getHeight() //returns height (used in draw() method)
-      {
-         return height;
-      }
-      public int getWidth() //returns width (used in draw() method)
-      {
-         return width;
       }
    }
    
-   public class RaisedTile extends Object
+   public class ObjectCollision extends Object
    {
       
-      public RaisedTile( String value_in )
+      public ObjectCollision( String value_in )
       {
          value = value_in;
-         switch( value)
-         {
-            case "202": //metal tile
-               Image metalTile = new Image("Metal_Tile.png");//202
-               image = metalTile;
-               height = 80;
-               width = 80;
-               break;
-         }
-      }
-      
-      public String getValue()
-      {
-         return value;
-      }
-      public Image getImage()
-      {
-         return image;
-      }
-      public int getHeight()
-      {
-         return height;
-      }
-      public int getWidth()
-      {
-         return width;
       }
    }
    
@@ -808,104 +881,88 @@ public class PuzzleProjectNewFormat extends Application
             //yellow spikes
             case "4100":
                //yellow spike, horizontal, not active
-               Image spikeYellowHorNA = new Image("YellowHole.png");
+               Image spikeYellowHorNA = new Image("yellowHole.png");
                image = spikeYellowHorNA;
                break;
             case "4101":
                //Yellow spike, horizontal, active
-               Image spikeYellowHorA = new Image("YellowSpike.png");
+               Image spikeYellowHorA = new Image("yellowSpike.png");
                image = spikeYellowHorA;
                break;
             case "4110":
                //Yellow spike, vertical, not active
-               Image spikeYellowVertNA = new Image("YellowHoleR.png");
+               Image spikeYellowVertNA = new Image("yellowHoleR.png");
                image = spikeYellowVertNA;
                break;
             case "4111":
                //Yellow spike, vertical, active
-               Image spikeYellowVertA = new Image("YellowSpikeR.png");
+               Image spikeYellowVertA = new Image("yellowSpikeR.png");
                image = spikeYellowVertA;
                break;
             //Green spikes
             case "4200":
                //Green spike, horizontal, not active
-               Image spikeGreenHorNA = new Image("GreenHole.png");
+               Image spikeGreenHorNA = new Image("greenHole.png");
                image = spikeGreenHorNA;
                break;
             case "4201":
                //Green spike, horizontal, active
-               Image spikeGreenHorA = new Image("GreenSpike.png");
+               Image spikeGreenHorA = new Image("greenSpike.png");
                image = spikeGreenHorA;
                break;
             case "4210":
                //Green spike, vertical, not active
-               Image spikeGreenVertNA = new Image("GreenHoleR.png");
+               Image spikeGreenVertNA = new Image("greenHoleR.png");
                image = spikeGreenVertNA;
                break;
             case "4211":
                //Green spike, vertical, active
-               Image spikeGreenVertA = new Image("GreenSpikeR");
+               Image spikeGreenVertA = new Image("greenSpikeR.png");
                image = spikeGreenVertA;
                break;
             //blue spikes
             case "4300":
                //Blue spike, horizontal, not active
-               Image spikeBlueHorNA = new Image("BlueHole.png");
+               Image spikeBlueHorNA = new Image("blueHole.png");
                image = spikeBlueHorNA;
                break;
             case "4301":
                //Blue spike, horizontal, active
-               Image spikeBlueHorA = new Image("BlueSpike.png");
+               Image spikeBlueHorA = new Image("blueSpike.png");
                image = spikeBlueHorA;
                break;
             case "4310":
                //Blue spike, vertical, not active
-               Image spikeBlueVertNA = new Image("BlueHoleR.png");
+               Image spikeBlueVertNA = new Image("blueHoleR.png");
                image = spikeBlueVertNA;
                break;
             case "4311":
                //Blue spike, vertical, active
-               Image spikeBlueVertA = new Image("BlueSpikeR.png");
+               Image spikeBlueVertA = new Image("blueSpikeR.png");
                image = spikeBlueVertA;
                break;
             //purple spikes
             case "4400":
                //Purple spike, horizontal, not active
-               Image spikePurpleHorNA = new Image("PurpleHole.png");
+               Image spikePurpleHorNA = new Image("purpleHole.png");
                image = spikePurpleHorNA;
                break;
             case "4401":
                //Purple spike, horizontal, active
-               Image spikePurpleHorA = new Image("PurpleSpike.png");
+               Image spikePurpleHorA = new Image("purpleSpike.png");
                image = spikePurpleHorA;
                break;
             case "4410":
                //Purple spike, vertical, not active
-               Image spikePurpleVertNA = new Image("PurpleHoleR.png");
+               Image spikePurpleVertNA = new Image("purpleHoleR.png");
                image = spikePurpleVertNA;
                break;
             case "4411":
                //Purple spike, vertical, active
-               Image spikePurpleVertA = new Image("PurpleSpikeR.png");
+               Image spikePurpleVertA = new Image("purpleSpikeR.png");
                image = spikePurpleVertA;
                break;
          }
-      }
-      public String getValue()
-      {
-         return value;
-      }
-      public Image getImage()
-      {
-         return image;
-      }
-      public int getHeight()
-      {
-         return height;
-      }
-      public int getWidth()
-      {
-         return width;
       }
    }
    
@@ -930,13 +987,13 @@ public class PuzzleProjectNewFormat extends Application
                break;
             case "5010":
                //orange pressure plate, circle, not pressed
-               //Image ppOrangeCirNP = new Image("orangeCirU.png");
-               //image = ppOrangeCirNP;
+               Image ppOrangeCirNP = new Image("orangeCirBU.jpg");
+               image = ppOrangeCirNP;
                break;
             case "5011":
                //orange pressure plate, circle, pressed
-               //Image ppOrangeCirP = new Image("orangeCirD.png");
-               //image = ppOrangeCirP;
+               Image ppOrangeCirP = new Image("orangeCirBD.jpg");
+               image = ppOrangeCirP;
                break;
             //yellow pressure plates
             case "5100":
@@ -951,13 +1008,13 @@ public class PuzzleProjectNewFormat extends Application
                break;
             case "5110":
                //Yellow pressure plate, circle, not pressed
-               //Image ppYellowCirNP = new Image("yellowCirU.png");
-               //image = ppYellowCirNP;
+               Image ppYellowCirNP = new Image("yellowCirBU.jpg");
+               image = ppYellowCirNP;
                break;
             case "5111":
                //Yellow pressure plate, circle, pressed
-               //Image ppYellowCirP = new Image("yellowCirD.png");
-               //image = ppYellowCirP;
+               Image ppYellowCirP = new Image("yellowCirBD.jpg");
+               image = ppYellowCirP;
                break;
             //Green pressure plates
             case "5200":
@@ -972,13 +1029,13 @@ public class PuzzleProjectNewFormat extends Application
                break;
             case "5210":
                //Green pressure plate, circle, not pressed
-               //Image ppGreenCirNP = new Image("greenCirU.png");
-               //image = ppGreenCirNP;
+               Image ppGreenCirNP = new Image("greenCirBU.jpg");
+               image = ppGreenCirNP;
                break;
             case "5211":
                //Green pressure plate, circle, pressed
-               //Image ppGreenCirP = new Image("greenCirD.png");
-               //image = ppGreenCirP;
+               Image ppGreenCirP = new Image("greenCirBD.jpg");
+               image = ppGreenCirP;
                break;
             //blue pressure plates
             case "5300":
@@ -993,13 +1050,13 @@ public class PuzzleProjectNewFormat extends Application
                break;
             case "5310":
                //Blue pressure plate, circle, not pressed
-               //Image ppBlueCirNP = new Image("blueCirU.png");
-               //image = ppBlueCirNP;
+               Image ppBlueCirNP = new Image("blueCirBU.jpg");
+               image = ppBlueCirNP;
                break;
             case "5311":
                //Blue pressure plate, circle, pressed
-               //Image ppBlueCirP = new Image("blueCirD.png");
-               //image = ppBlueCirP;
+               Image ppBlueCirP = new Image("blueCirBD.jpg");
+               image = ppBlueCirP;
                break;
             //purple pressure plates
             case "5400":
@@ -1014,31 +1071,15 @@ public class PuzzleProjectNewFormat extends Application
                break;
             case "5410":
                //Purple pressure plate, circle, not pressed
-               //Image ppPurpleCirNP = new Image("purpleCirU.png");
-               //image = ppPurpleCirNP;
+               Image ppPurpleCirNP = new Image("purpleCirBU.jpg");
+               image = ppPurpleCirNP;
                break;
             case "5411":
                //Purple pressure plate, circle, pressed
-               //Image ppPurpleCirP = new Image("purpleCirD.png");
-               //image = ppPurpleCirP;
+               Image ppPurpleCirP = new Image("purpleCirBD.jpg");
+               image = ppPurpleCirP;
                break;
          }    
-      }
-      public String getValue()
-      {
-         return value;
-      }
-      public Image getImage()
-      {
-         return image;
-      }
-      public int getHeight()
-      {
-         return height;
-      }
-      public int getWidth()
-      {
-         return width;
       }
    }
    
@@ -1093,22 +1134,7 @@ public class PuzzleProjectNewFormat extends Application
          
          
       }
-      public String getValue()
-      {
-         return value;
-      }
-      public Image getImage()
-      {
-         return image;
-      }
-      public int getHeight()
-      {
-         return height;
-      }
-      public int getWidth()
-      {
-         return width;
-      }
+
    }
    
    public class Wall extends Object
@@ -1129,22 +1155,7 @@ public class PuzzleProjectNewFormat extends Application
   
       }
      
-      public String getValue()
-      {
-         return value;
-      }
-      public Image getImage()
-      {
-         return image;
-      }
-      public int getHeight()
-      {
-         return height;
-      }
-      public int getWidth()
-      {
-         return width;
-      }
+      
    }
    
    public class Portal extends Object
@@ -1154,46 +1165,37 @@ public class PuzzleProjectNewFormat extends Application
       public Portal( String value_in )
       {
          value = value_in;
-         height = 60;
-         width = 40;
          
          switch( value )
          {
             case "800": //Up Portal
                Image upPortal = new Image("arrowUp.png");//21
                image = upPortal;
+               height = 60;
+               width = 40;
                break;
             case "801": //Left Portal
                Image leftPortal = new Image("arrowLeft.png");//21
                image = leftPortal;
+               height = 40;
+               width = 60;
                break;
             case "802": //Down Portal
                Image downPortal = new Image("arrowDown.png");//21
                image = downPortal;
+               height = 60;
+               width = 40;
                break;
             case "803": //Right Portal
                Image rightPortal = new Image("arrowRight.png");//21
                image = rightPortal;
+               height = 40;
+               width = 60;
                break;
          }
       }
 
-      public String getValue()
-      {
-         return value;
-      }
-      public Image getImage()
-      {
-         return image;
-      }
-      public int getHeight()
-      {
-         return height;
-      }
-      public int getWidth()
-      {
-         return width;
-      }
+      
    }
    
    public class Gate extends Object
@@ -1201,23 +1203,21 @@ public class PuzzleProjectNewFormat extends Application
       public Gate( String value_in )
       {
          value = value_in;
+         height = 60;
+         width = 20;
+         
+         switch( value)
+         {
+            case "700":
+               Image gateClosed = new Image("gate.jpg");
+               image = gateClosed;
+               break;
+            case "701":
+               Image gateOpen = new Image("Cobblestone_Tile.png");
+               image = gateOpen;
+         }
       }
-      public String getValue()
-      {
-         return value;
-      }
-      public Image getImage()
-      {
-         return image;
-      }
-      public int getHeight()
-      {
-         return height;
-      }
-      public int getWidth()
-      {
-         return width;
-      }
+      
    }
    
    public class Misc extends Object
@@ -1251,35 +1251,30 @@ public class PuzzleProjectNewFormat extends Application
                      break;      
                }
                break;
+            case "91": //screwdriver
+               height = 40;
+               width = 120;
+               Image screwdriver = new Image( "screwdriver.jpg");
+               image = screwdriver;
+               break;
             //case: 999 //for other misc in the future
          }
       }
-      public String getValue()
-      {
-         return value;
-      }
-      public Image getImage()
-      {
-         return image;
-      }
-      public int getHeight()
-      {
-         return height;
-      }
-      public int getWidth()
-      {
-         return width;
-      }
+      
       public void update() //moves animation to next frame
       {
-   
-         if( frameNum.equals("1") )
-            frameNum = "2";
-         else
-            frameNum = "1";
-         
-         value = ""+ value.charAt(0) + value.charAt(1) + frameNum;
-         
+         //only do if a jukebox, not for 999 values
+         if( first2Chars.equals("90") )
+         {
+            System.out.print("Jukebox updated" + frameNum );
+            if( frameNum.equals("1") )
+               frameNum = "2";
+            else
+               frameNum = "1";
+            
+            value = ""+ value.charAt(0) + value.charAt(1) + frameNum;
+            System.out.println(" "+ frameNum );
+         }   
          /* USE FOR MAKING THE UPDATE SWITCH NOT AS FREQUENTLY
          if( first2Chars.equals("90") ) //what to do for jukebox
          {
@@ -1306,3 +1301,4 @@ public class PuzzleProjectNewFormat extends Application
    }
    
 }
+
