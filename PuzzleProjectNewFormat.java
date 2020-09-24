@@ -25,7 +25,7 @@ public class PuzzleProjectNewFormat extends Application
    
    
    //set up buttons
-   Button b1 = new Button("New Game");// Button to start the game
+   Button b1 = new Button("Start");// Button to start the game
    Button b2 = new Button("Load");// Button to load the game
    Button b3 = new Button("Restart Area");// Button to restart the area/room
    Button b4 = new Button("Restart Level");//Button to restart the level
@@ -45,8 +45,6 @@ public class PuzzleProjectNewFormat extends Application
    
    String currentLevelLoad;
    String levelName = "menu"; //start game on menu
-   
-   
    
    public void start(Stage stage)
    {
@@ -107,7 +105,7 @@ public class PuzzleProjectNewFormat extends Application
                level.loadData();
                level.draw(gc);
                level.writeData();
-               
+                
                //adds start and load button to menu
                if(addMenuButtons == true)
                {  
@@ -123,17 +121,14 @@ public class PuzzleProjectNewFormat extends Application
                   b2.setFocusTraversable(false);
                   b2.setOnAction( new ButtonHandler() );
                   
-                  addMenuButtons = false;
+                  addMenuButtons = false; 
                }
                
-               
-               
-                
                // NOTE: MIGHT MAKE COLLISION DETECTION DIFFICULT TO ONLY DO EVERY 10 ITERATIONS, so not doing it
                if( count % 20 == 0 ) //only runs code every 20 iterations of timer
                {
                   
-                  //System.out.println( count/20);
+                  ////System.out.println( count/20);
                   level.updateData();           
                   
                }
@@ -161,9 +156,8 @@ public class PuzzleProjectNewFormat extends Application
       //data structures to hold level data, no constructor needed
       Object[][] objectArray = new Object[40][40];
       String [] connectingRoomsArray = new String[4];
-      String[][] resetLevel = new String[40][40];
       
-      //String levelName = "menu"; //start game on menu
+      String levelName = "menu"; //start game on menu
       String outputFile = "outputFile.txt"; //starting output file
       
       /*
@@ -178,7 +172,7 @@ public class PuzzleProjectNewFormat extends Application
       {
          if( levelName != "menu")
          {
-            //System.out.println( "Debug 2");
+            ////System.out.println( "Debug 2");
             
             try //Try catch loop to catch fnfe
             {
@@ -224,9 +218,9 @@ public class PuzzleProjectNewFormat extends Application
                            objectArray[i][j] = new Misc(value);
                            break;  
                      }
-                     //System.out.print( objectArray[i][j].getValue() + " "); //for debugging
+                     ////System.out.print( objectArray[i][j].getValue() + " "); //for debugging
                   }
-                 //System.out.println(); //for debugging
+                 ////System.out.println(); //for debugging
                }
                
                //now read in the portal connections array
@@ -235,9 +229,9 @@ public class PuzzleProjectNewFormat extends Application
                   //read next num from file
                   String connectingRoom = read.next();
                   connectingRoomsArray[k] = connectingRoom;
-                  //System.out.print( connectingRoom + " ");
+                  ////System.out.print( connectingRoom + " ");
                }
-               //System.out.println();
+               ////System.out.println();
                
                //Collison Control (IN PROGRESS) FUNCTIONS CORRECTLY(Considering making this a class with methods...) -HK  
                Set<String> names = new HashSet<String>();// set containing all object types player cant pass through
@@ -264,11 +258,9 @@ public class PuzzleProjectNewFormat extends Application
                names.add("4401");
                names.add("4411");
                
-               
-               
                //Code below is used for testing where you are and what the value the object you are standing on is
-               //System.out.print(objectArray[((y/20))][(x/20)].getValue());//test (MIGHT NOT BE ACCURATE)
-               //System.out.print("x: "+x/20+" y:"+y/20+" ");//test for displaying where character is
+               ////System.out.print(objectArray[((y/20))][(x/20)].getValue());//test (MIGHT NOT BE ACCURATE)
+               ////System.out.print("x: "+x/20+" y:"+y/20+" ");//test for displaying where character is
                //check above 
                if(names.contains(objectArray[(y-1)][x].getValue()) || names.contains(objectArray[y-1][x+1].getValue()))//for above character
                {
@@ -304,17 +296,17 @@ public class PuzzleProjectNewFormat extends Application
                */
                
                
-               //System.out.println( "Debug 3");
+               ////System.out.println( "Debug 3");
             }
             catch(FileNotFoundException fnfe)
             {
-               System.out.println( "File " + levelName + " not found"); 
+               //System.out.println( "File " + levelName + " not found"); 
             }
          }
          
          else
          {
-            //System.out.println( "Menu active");
+            ////System.out.println( "Menu active");
          }
       }
       //draw method to draw the level to the screen
@@ -337,7 +329,7 @@ public class PuzzleProjectNewFormat extends Application
                   //to cover for null space
                   if( objectArray[i][j].getValue().equals("100") )
                   {
-                     //System.out.println("100 value found");
+                     ////System.out.println("100 value found");
                      gc.setFill(Color.BLACK);  
                      gc.fillRect(20*j, 20*i, height, width);               
                   }
@@ -399,7 +391,7 @@ public class PuzzleProjectNewFormat extends Application
          }
          else// drawing the menu if "menu" is set
          {
-            //System.out.println( "no draw, menu open");
+            ////System.out.println( "no draw, menu open");
             //set up menu 
             gc.setFill(Color.BLACK);
             gc.fillRect( 0, 0, 800, 800);
@@ -409,18 +401,6 @@ public class PuzzleProjectNewFormat extends Application
             gc.fillText("BY Harry, Hudson, and Jake", 500, 500);
          }
       }
-      
-      /*
-      b1.setPrefSize(150, 75);
-      b2.setPrefSize(150, 75);
-      fp.getChildren().add(b1);
-      fp.getChildren().add(b2);
-      
-      b1.setFocusTraversable(false);
-      b1.setOnAction( new ButtonHandler() );
-      b2.setFocusTraversable(false);
-      b2.setOnAction( new ButtonHandler() );
-      */
       
       //update method to update values
       public void updateData()
@@ -434,10 +414,10 @@ public class PuzzleProjectNewFormat extends Application
                {
                   //for every object, call the update() method, which for animated objects will push to next frame
                   objectArray[i][j].update();
-                }  
+               }  
             }
             
-            //System.out.println( objectArray[0][0].getValue() );
+            ////System.out.println( objectArray[0][0].getValue() );
          }  
       }
       
@@ -448,7 +428,7 @@ public class PuzzleProjectNewFormat extends Application
          if( levelName != "menu")
          {
             //test different methods for the objects  
-            //System.out.println( objectArray[0][0].getValue() );
+            ////System.out.println( objectArray[0][0].getValue() );
             
             //try catch to output object array to a specified text file
             try
@@ -460,10 +440,10 @@ public class PuzzleProjectNewFormat extends Application
                {
                   for( int j=0; j<40; j++)
                   {
-                     //System.out.print(  objectArray[i][j].getValue() + " ");
+                     ////System.out.print(  objectArray[i][j].getValue() + " ");
                      pw.print( objectArray[i][j].getValue() + " " );
                   }
-                  //System.out.println();
+                  ////System.out.println();
                   pw.println();
                } 
                
@@ -478,7 +458,7 @@ public class PuzzleProjectNewFormat extends Application
             }
             catch( FileNotFoundException fnfe)
             {
-               System.out.println("fnfe exception");
+               //System.out.println("fnfe exception");
             }
 
             
@@ -490,6 +470,211 @@ public class PuzzleProjectNewFormat extends Application
 
       }
       
+      
+      //collision detection method for special objects (buttons, portals, springs)
+      public void collisionCheck()
+      {
+         
+         //read in the area where the player is, as well as the area around it, into an array (size 5x5)
+         
+         
+         ////System.out.println("broad phase collision");
+         
+         //BROAD PHASE COLLISION SECTION
+         
+         //nested for loops to test each value
+         for( int i=0; i<5; i++)
+         {
+            for( int j=0; j<7; j++)
+            {
+               int yval = y-3+i;
+               int xval = x-5+j;
+               
+               ////System.out.print( xval + " " + yval + " "); //xval +" " + yval);
+               //System.out.print( objectArray[yval][xval].getValue() +" " );
+               
+               
+               //get object in question's bounds for use in collision algorithm
+               int objectX = xval;
+               int objectY = yval;
+               int objectHeight = objectArray[yval][xval].getHeight() / 20; //divide by 20 to get numerical values
+               int objectWidth = objectArray[yval][xval].getWidth() / 20;
+               //get player bounds
+               int playerX = x; 
+               int playerY = y;
+               int playerHeight = 40 / 20;
+               int playerWidth = 40 / 20;
+               
+               //NARROW PHASE COLLISION SECTION 
+                              
+               //check the object's 1st num to see if it is a special object
+               String value = objectArray[yval][xval].getValue();
+               String firstChar = ""+ value.charAt(0);
+               switch( firstChar)
+               {
+                  case "5": //pressure plate (button)
+                     //only switch spikes if pressure plate is not pressed
+                     String isPressed = value.substring(3);
+                     
+                     if( isPressed.equals("0") )
+                     {
+                        
+                        
+                        //means that there is a pressure plate in the area
+                        if (playerX < objectX + objectWidth &&
+                           playerX + playerWidth > objectX &&
+                           playerY < objectY + objectHeight &&
+                           playerY + playerHeight > objectY)
+                        {   
+                           ////System.out.println( "player has collided with a pressure plate");
+                           
+                           //figure out what color it is
+                           String color = ""+value.charAt(1);
+                           
+                           //use switch to call method based on color parameter
+                           switch( color)
+                           {
+                              case "0": //orange
+                                 switchSpikes("0");
+                                 break;
+                              case "1": //yellow
+                                 switchSpikes("1");
+                                 break;
+                              case "2": //green
+                                 switchSpikes("2");
+                                 break;
+                              case "3": //blue
+                                 switchSpikes("3");
+                                 break;
+                              case "4": //purple
+                                 switchSpikes("4");
+                                 break;
+                           }
+                           //change pressure plate to be pressed
+                           String lastChar = "1";   
+                           objectArray[yval][xval].setValue(value.substring(0,3)+lastChar);
+                           
+                           //call writeData() to make changes permanent
+                           writeData();
+                        }
+                     }
+                     
+                     break;
+                  case "6": //spring
+                     break;
+                  case "8": //portal
+                     if (playerX < objectX + objectWidth &&
+                        playerX + playerWidth > objectX &&
+                        playerY < objectY + objectHeight &&
+                        playerY + playerHeight > objectY)
+                     {   
+                        //System.out.println( "player has collided with a portal");
+                        //now determine where to move player based on connectingRoomsArray
+                        switch( value )
+                        {
+                           case "800": //up arrow
+                              changeLevel( connectingRoomsArray[0]);
+                              break;
+                           case "801": //left arrow
+                              changeLevel( connectingRoomsArray[1]);
+                              break;
+                           case "802": //down arrow
+                              changeLevel( connectingRoomsArray[2]);
+                              break;
+                           case "803": //right arrow
+                              changeLevel( connectingRoomsArray[3]);
+                              break;       
+                        }
+                     }
+                     break;
+                  case "9": //screwdriver
+                     if( value.substring(0,2).equals("91") ) //only screwdriver, no jukeboxes or 999's
+                     {
+                        if (playerX < objectX + objectWidth &&
+                        playerX + playerWidth > objectX &&
+                        playerY < objectY + objectHeight &&
+                        playerY + playerHeight > objectY)
+                        {
+                           //means that there has been a collision with a screwdriver
+                           //make screwdriver disappear
+                           objectArray[yval][xval].setValue( value.substring(0,2)+"1" );
+                           
+                           //make changes permanent
+                           writeData();
+                        } 
+                     }
+                     break;
+               }   
+            }
+            ////System.out.println();
+         }
+         
+      }
+      //flip all specified colored spikes between on and off
+      public void switchSpikes( String colorNum_in)
+      {
+         String colorNum = colorNum_in;
+         
+         String searchSubstring = "4"+colorNum; //use this to go through the objectArray
+         
+         //nested for loops to find matching objects
+         for( int i=0; i<40; i++)
+         {
+            for(int j=0; j<40; j++)
+            {
+               String value =objectArray[i][j].getValue();
+               String first2Chars = value.substring(0,2);
+               if( first2Chars.equals( searchSubstring) )
+               {
+                  ////System.out.println( "Found a matching spike to switch");
+                  //last num of value is whether the spike is on or off
+                  String last2Chars = value.substring(2);
+                  ////System.out.println( value);
+                  switch( last2Chars)
+                  {
+                     case "00": //horizontal not active
+                        last2Chars = "01";
+                        //change 3 tiles to the right to 222
+                        objectArray[i][j+1].setValue( "222");
+                        objectArray[i][j+2].setValue( "222");
+                        objectArray[i][j+3].setValue( "222");
+                        
+                        break;
+                     case "01": //horizontal active
+                        last2Chars = "00";
+                        //change 3 tiles to the right to 999
+                        objectArray[i][j+1].setValue( "999");
+                        objectArray[i][j+2].setValue( "999");
+                        objectArray[i][j+3].setValue( "999");
+                        
+                        break;
+                     case "10": //vertical not active
+                        last2Chars = "11";
+                        //change 3 tiles below to 222
+                        objectArray[i+1][j].setValue( "222");
+                        objectArray[i+2][j].setValue( "222");
+                        objectArray[i+3][j].setValue( "222");
+                        break;
+                     case "11": //vertical active
+                        last2Chars = "10";
+                        //change 3 tiles below to 999
+                        objectArray[i+1][j].setValue( "999");
+                        objectArray[i+2][j].setValue( "999");
+                        objectArray[i+3][j].setValue( "999");
+                        break;
+                  }
+                  
+                  //now make changes to the actual value
+                  objectArray[i][j].setValue( value.substring(0,2)+last2Chars );
+                  
+                  ////System.out.println( objectArray[i][j].getValue());
+               }
+            }
+         }
+         
+         
+      }
+      
       //returns the current level name
       public String getLevelName()
       {
@@ -499,7 +684,7 @@ public class PuzzleProjectNewFormat extends Application
       public void setLevelName( String levelName_in)
       {
          levelName = levelName_in;
-         System.out.println("level changed to: " + levelName);
+         //System.out.println("level changed to: " + levelName);
       } 
       public void setOutputFile( String outputFile_in )
       {
@@ -534,139 +719,19 @@ public class PuzzleProjectNewFormat extends Application
          }
          loadData();
       }
-      
-      //collision detection methods, broad phase and narrow phase RETURN TRUE IF COLLISION PRESENT, FALSE IF NO COLLISIONS
-      public boolean collisionCheck()
-      {
-         //read in the area where the player is, as well as the area around it, into an array (size 6x6)
-         //System.out.println( objectArray[y][x].getValue());
-         
-         //Object[][] collisionArray = new Object[4][4];
-         
-         
-         System.out.println("broad phase collision");
-         //nested for loops to test each value
-         for( int i=0; i<5; i++)
-         {
-            for( int j=0; j<5; j++)
-            {
-               int yval = y-3+i;
-               int xval = x-3+j;
-               //System.out.print( xval + " " + yval + " "); //xval +" " + yval);
-               System.out.print( objectArray[yval][xval].getValue() +" " );
-               
-               
-               //get object in question's bounds for use in collision algorithm
-               int objectX = xval;
-               int objectY = yval;
-               int objectHeight = objectArray[yval][xval].getHeight() / 20; //divide by 20 to get numerical values
-               int objectWidth = objectArray[yval][xval].getWidth() / 20;
-               //get player bounds
-               int playerX = x; 
-               int playerY = y;
-               int playerHeight = 40 / 20;
-               int playerWidth = 40 / 20;
-               
-               //NARROW PHASE COLLISION SECTION 
-                              
-               //check the object's 1st num to see if it is a special object
-               String value = objectArray[yval][xval].getValue();
-               String firstChar = ""+ value.charAt(0);
-               switch( firstChar)
-               {
-                  case "5": //pressure plate (button)
-                     //means that there is a pressure plate in the area
-                     if (playerX < objectX + objectWidth &&
-                        playerX + playerWidth > objectX &&
-                        playerY < objectY + objectHeight &&
-                        playerY + playerHeight > objectY)
-                     {   
-                        System.out.println( "player has collided with a pressure plate");
-                        
-                        String lastChar = ""+value.charAt(3);
-                        if( lastChar.equals("0") )
-                           lastChar = "1";
-                        else
-                           lastChar = "0";
-                        
-                     }
-                     break;
-                  case "6": //spring
-                     break;
-                  case "8": //portal
-                     if (playerX < objectX + objectWidth &&
-                        playerX + playerWidth > objectX &&
-                        playerY < objectY + objectHeight &&
-                        playerY + playerHeight > objectY)
-                     {   
-                        System.out.println( "player has collided with a portal");
-                        //now determine where to move player based on connectingRoomsArray
-                        switch( value )
-                        {//Part2
-                           case "800": //up arrow
-                              System.out.println( "old file:" + levelName);
-                              changeLevel( connectingRoomsArray[0]);
-                              System.out.println( "new file:" + levelName);
-                              break;
-                           case "801": //left arrow
-                              System.out.println( "old file:" + levelName);
-                              changeLevel( connectingRoomsArray[1]);
-                              System.out.println( "new file:" + levelName);
-                              break;
-                           case "802": //down arrow
-                              System.out.println( "old file:" + levelName);
-                              changeLevel( connectingRoomsArray[2]);
-                              System.out.println( "new file:" + levelName);
-                              break;
-                           case "803": //right arrow
-                              System.out.println( "old file:" + levelName);
-                              changeLevel( connectingRoomsArray[3]);
-                              System.out.println( "new file:" + levelName);
-                              break;
-                              
-                              
-                        }
-                     }
-                     break;
-                  case "9": //screwdriver
-                     break;
-               }
-               
-            }
-            System.out.println();
-         }
-         
-         
-         //check each value in array to see if it is a potential collision object
-         
-         //call narrowPhaseCollision on all potential collisions
-         return false;
-      }
-      public boolean narrowPhaseCollision()
-      {
-         return false;
-      }
-   } 
+   }      
    
-   
-   //key & button handlers
+   //Section: key & button handlers 
    public class KeyHandler implements EventHandler<KeyEvent>
    {
       
       public void handle(KeyEvent event)
-      {
-         /*
-         int x = canvas.getLevel().getX();
-         int y = canvas.getLevel().getY();
-         int z = canvas.getLevel().getZ();
-         boolean a = canvas.getLevel().getA();
-         */
-         
+      {  
          String currentLevel = canvas.getLevel().getLevelName();
          
          if( currentLevel.equals("menu") )
          {
-            System.out.println("no keys, menu open");
+            //System.out.println("no keys, menu open");
          }
          else
          {
@@ -712,7 +777,7 @@ public class PuzzleProjectNewFormat extends Application
       {  
                   
          //button instructions
-         System.out.println( "button press");
+         //System.out.println( "button press");
          String currentLevel = canvas.getLevel().getLevelName();
          //String currentLevelLoad
          
@@ -723,6 +788,19 @@ public class PuzzleProjectNewFormat extends Application
             //start (or new game) //***Working
             if(e.getSource() == b1)
             {
+               //room1 reset
+               canvas.getLevel().setLevelName("room1_backup.txt");               
+               canvas.getLevel().setOutputFile("room1.txt");
+               canvas.getLevel().loadData();
+               canvas.getLevel().writeData();
+               
+               //room2 reset
+               canvas.getLevel().setLevelName("room2_backup.txt");               
+               canvas.getLevel().setOutputFile("room2.txt");
+               canvas.getLevel().loadData();
+               canvas.getLevel().writeData();
+               
+               canvas.getLevel().changeLevel("jukebox_room.txt");
                canvas.getLevel().setLevelName( "jukebox_room.txt");
                canvas.getLevel().setOutputFile( "jukebox_room.txt");
             }
@@ -810,11 +888,12 @@ public class PuzzleProjectNewFormat extends Application
             else if(e.getSource() == b5)
             {
                currentLevelLoad = canvas.getLevel().getLevelName();
-               System.out.println("Level Saved");
+               //System.out.println("Level Saved");
                
                fp.getChildren().clear();
             }
-            //if Menu button is pressed //***Working
+            /*
+            //if Menu button is pressed //***NOT WORKING
             else if(e.getSource() == b6)
             {
                //sets boolean to true telling the command in the animation handler to redraw the menu
@@ -825,6 +904,7 @@ public class PuzzleProjectNewFormat extends Application
                
                
             }
+            */
             
                         
          }
@@ -837,7 +917,7 @@ public class PuzzleProjectNewFormat extends Application
          fp.getChildren().add(b3);
          fp.getChildren().add(b4);
          fp.getChildren().add(b5);
-         fp.getChildren().add(b6);
+         //fp.getChildren().add(b6);
          
          b3.setFocusTraversable(false);
          b3.setOnAction( new ButtonHandler() );
@@ -845,12 +925,11 @@ public class PuzzleProjectNewFormat extends Application
          b4.setOnAction( new ButtonHandler() );
          b5.setFocusTraversable(false);
          b5.setOnAction( new ButtonHandler() );
-         b6.setFocusTraversable(false);
-         b6.setOnAction( new ButtonHandler() );
+         //b6.setFocusTraversable(false);
+         //b6.setOnAction( new ButtonHandler() );
          
       }
    }
-   
     
    //Inheritance Section:
    public abstract class Object
@@ -867,6 +946,10 @@ public class PuzzleProjectNewFormat extends Application
       public String getValue()
       {
          return value;
+      }
+      public void setValue( String value_in)
+      {
+         value = value_in;
       }
       public Image getImage()
       {
@@ -964,7 +1047,7 @@ public class PuzzleProjectNewFormat extends Application
          }      
       }
    }
-   
+   //USED FOR 222 VALUES
    public class ObjectCollision extends Object
    {
       
@@ -1271,11 +1354,8 @@ public class PuzzleProjectNewFormat extends Application
                Image springEActive = new Image( "springTileWE.png");
                image = springEActive;
                break;
-         }
-         
-         
+         }     
       }
-
    }
    
    public class Wall extends Object
@@ -1293,16 +1373,13 @@ public class PuzzleProjectNewFormat extends Application
          //set wall dimensions
          height = 20*wallHeight;
          width = 20*wallWidth;
-  
-      }
-     
-      
+      } 
    }
    
    public class Portal extends Object
    {
       String connectingRoom;
-      
+       
       public Portal( String value_in )
       {
          value = value_in;
@@ -1334,11 +1411,8 @@ public class PuzzleProjectNewFormat extends Application
                width = 60;
                break;
          }
-      }
-
-      
+      } 
    }
-   
    public class Gate extends Object
    {
       public Gate( String value_in )
@@ -1357,8 +1431,7 @@ public class PuzzleProjectNewFormat extends Application
                Image gateOpen = new Image("Cobblestone_Tile.png");
                image = gateOpen;
          }
-      }
-      
+      } 
    }
    
    public class Misc extends Object
@@ -1395,8 +1468,14 @@ public class PuzzleProjectNewFormat extends Application
             case "91": //screwdriver
                height = 40;
                width = 120;
-               Image screwdriver = new Image( "screwdriver.jpg");
-               image = screwdriver;
+               if( value.substring(2).equals("0") )
+               {
+                  Image screwdriver = new Image( "screwdriver.jpg");
+                  image = screwdriver;
+               }
+               else
+                  //means that screwdriver has been picked up, so make it disappear
+                  image = null;
                break;
             //case: 999 //for other misc in the future
          }
@@ -1407,26 +1486,26 @@ public class PuzzleProjectNewFormat extends Application
          //only do if a jukebox, not for 999 values
          if( first2Chars.equals("90") )
          {
-            System.out.print("Jukebox updated" + frameNum );
+            ////System.out.print("Jukebox updated" + frameNum );
             if( frameNum.equals("1") )
                frameNum = "2";
             else
                frameNum = "1";
             
             value = ""+ value.charAt(0) + value.charAt(1) + frameNum;
-            System.out.println(" "+ frameNum );
+            //System.out.println(" "+ frameNum );
          }   
          /* USE FOR MAKING THE UPDATE SWITCH NOT AS FREQUENTLY
          if( first2Chars.equals("90") ) //what to do for jukebox
          {
             timeCount = timeCount + 1;
             
-            System.out.println( "update called Jukebox" + timeCount);
+            //System.out.println( "update called Jukebox" + timeCount);
             
             if( timeCount % 20 == 0) //only switch frames every 20 calls
             {
                timeCount = 0;
-               System.out.println( "DONE");
+               //System.out.println( "DONE");
                
                if( frameNum.equals("1") )
                   frameNum = "2";
@@ -1442,4 +1521,3 @@ public class PuzzleProjectNewFormat extends Application
    }
    
 }
-
