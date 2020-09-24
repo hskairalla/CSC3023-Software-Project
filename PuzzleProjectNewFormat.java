@@ -681,7 +681,8 @@ public class PuzzleProjectNewFormat extends Application
             {
                //String ln = currentLevel.getLevelName();
                canvas.getLevel().setLevelName(currentLevel);
-               canvas.getLevel().setOutputFile(currentLevel); 
+               canvas.getLevel().setOutputFile(currentLevel);
+               canvas.getLevel().changeLevel(currentLevel); 
                fp.getChildren().clear();
             }
             //if "Restart Level" is pressed, change the room to the jukebox room
@@ -689,7 +690,8 @@ public class PuzzleProjectNewFormat extends Application
             {
                //String ln = currentLevel.getLevelName();
                canvas.getLevel().setLevelName("jukebox_room.txt");
-               canvas.getLevel().setOutputFile("jukebox_room.txt"); 
+               canvas.getLevel().setOutputFile("jukebox_room.txt");
+               canvas.getLevel().changeLevel("jukebox_room.txt");
                fp.getChildren().clear();
             }
             
