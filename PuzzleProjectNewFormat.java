@@ -257,6 +257,9 @@ public class PuzzleProjectNewFormat extends Application
                names.add("4311");
                names.add("4401");
                names.add("4411");
+               //add values for springs that have been sprung
+               names.add("610");
+               names.add("630");
                
                //Code below is used for testing where you are and what the value the object you are standing on is
                ////System.out.print(objectArray[((y/20))][(x/20)].getValue());//test (MIGHT NOT BE ACCURATE)
@@ -561,6 +564,43 @@ public class PuzzleProjectNewFormat extends Application
                      
                      break;
                   case "6": //spring
+                     if (playerX < objectX + objectWidth &&
+                        playerX + playerWidth > objectX &&
+                        playerY < objectY + objectHeight &&
+                        playerY + playerHeight > objectY)
+                     { 
+                        //if you're colliding with a spring, based on direction get pushed
+                        switch( value )
+                        {
+                           case "611":
+                              //launch to left
+                              x = x-6;
+                              objectArray[yval][xval].setValue("610"); //set to activated spring
+                              //below objects change to impassable
+                              objectArray[i+1][j].setValue( "222");
+                              objectArray[i+2][j].setValue( "222");
+                              objectArray[i+3][j].setValue( "222");
+                              //right objects change
+                              objectArray[i][j+1].setValue( "222");
+                              objectArray[i][j+2].setValue( "222");
+                              writeData();
+                              break;
+                           case "631":
+                              //launch to right
+                              x = x+6;
+                              objectArray[yval][xval].setValue("630"); //set to activated spring
+                              //below objects change to impassable
+                              objectArray[i+1][j].setValue( "222");
+                              objectArray[i+2][j].setValue( "222");
+                              objectArray[i+3][j].setValue( "222");
+                              //right objects change
+                              objectArray[i][j+1].setValue( "222");
+                              objectArray[i][j+2].setValue( "222");
+                              writeData(); 
+                              break;
+                        
+                        }
+                     }
                      break;
                   case "8": //portal
                      if (playerX < objectX + objectWidth &&
@@ -706,7 +746,7 @@ public class PuzzleProjectNewFormat extends Application
                break;
             case "room1.txt":
                x = 18;
-               y = 31;
+               y = 33;
                z = 0;
                a = false;
                break;
@@ -1312,7 +1352,10 @@ public class PuzzleProjectNewFormat extends Application
       public Spring( String value_in )
       {
          value = value_in;
-        
+         
+         height = 80;
+         width = 60;
+         
          switch( value)
          {
             case "600":
